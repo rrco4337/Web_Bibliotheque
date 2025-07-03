@@ -1,22 +1,158 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="corporate">
 <head>
     <meta charset="UTF-8" />
-    <title>Liste fonctionnalite </title>
-</head>
-<body>
-    <h2>Liste des fonctionnalite</h2>
-    <a th:href="@{/type-adherents/liste}">Type Adherant</a>
-    </br>
-    <a th:href="@{/adherents/listeAdherent}">Adherant</a>
-    </br>
-    <a th:href="@{/livres/liste}">Gestion livre</a>
-      </br>
-    <a th:href="@{/type-payements/liste}">Type Payement </a>
-  </br>
-    <a th:href="@{/paiements}">Gestion Payement </a>
-
-
+    <title>Gestion Bibliothèque Municipale</title>
     
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind avec daisyUI -->
+    <script>
+        tailwind.config = {
+            plugins: [require("daisyui")],
+            daisyui: {
+                themes: ["corporate", "business", "luxury"],
+            },
+        }
+    </script>
+    
+    <!-- DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        .feature-card {
+            @apply card bg-base-100 border border-gray-200;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .feature-card:hover {
+            @apply shadow-lg;
+            transform: translateY(-5px);
+            border-color: hsl(var(--p));
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, hsl(var(--p)) 0%, hsl(var(--s)) 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header élégant avec dégradé -->
+    <header class="gradient-header text-white">
+        <div class="container mx-auto py-12 px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Bibliothèque Municipale</h1>
+            <p class="text-xl opacity-90">Gestion complète des ressources documentaires</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-12 px-6 -mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Carte Type Adhérent -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-users text-2xl text-primary"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Types d'Adhérents</h2>
+                    <p class="text-gray-600 mb-6">Gérer les catégories d'adhérents</p>
+                    <a th:href="@{/type-adherents/liste}" class="btn btn-primary btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Adhérents -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-user-friends text-2xl text-success"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Adhérents</h2>
+                    <p class="text-gray-600 mb-6">Gérer les membres de la bibliothèque</p>
+                    <a th:href="@{/adherents/listeAdherent}" class="btn btn-success btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Gestion Livres -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-warning/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-book text-2xl text-warning"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Livres</h2>
+                    <p class="text-gray-600 mb-6">Administrer le catalogue documentaire</p>
+                    <a th:href="@{/livres/liste}" class="btn btn-warning btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Type Paiement -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-credit-card text-2xl text-secondary"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Types de Paiement</h2>
+                    <p class="text-gray-600 mb-6">Configurer les modes de règlement</p>
+                    <a th:href="@{/type-payements/liste}" class="btn btn-secondary btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Gestion Paiement -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-money-bill-wave text-2xl text-accent"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Paiements</h2>
+                    <p class="text-gray-600 mb-6">Suivi des transactions financières</p>
+                    <a th:href="@{/paiements}" class="btn btn-accent btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Gestion Pénalités -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-2xl text-error"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Pénalités</h2>
+                    <p class="text-gray-600 mb-6">Suivi des retards et amendes</p>
+                    <a th:href="@{/penalites/liste}" class="btn btn-error btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Carte Liste de Prêt -->
+            <div class="feature-card">
+                <div class="card-body items-center text-center p-8">
+                    <div class="w-16 h-16 rounded-full bg-info/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-exchange-alt text-2xl text-info"></i>
+                    </div>
+                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Prêts</h2>
+                    <p class="text-gray-600 mb-6">Suivi des emprunts en cours</p>
+                    <a th:href="@{/prets/liste}" class="btn btn-info btn-sm px-8">
+                        Accéder <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-base-200 py-8 mt-12">
+        <div class="container mx-auto px-6 text-center text-gray-600">
+            <p>© 2025 Bibliothèque Municipale - Tous droits réservés</p>
+        </div>
+    </footer>
 </body>
 </html>
