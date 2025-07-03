@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Prêts</title>
+</head>
+<body>
+<h2>Liste des prêts</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Adhérent</th>
+            <th>Exemplaire</th>
+            <th>Date du prêt</th>
+            <th>Date retour prévue</th>
+            <th>Date retour réelle</th>
+            <th>Type de prêt</th>
+            <th>Prolongé</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="pret : ${prets}">
+            <td th:text="${pret.id}"></td>
+            <td th:text="${pret.adherent.nom} + ' ' + ${pret.adherent.prenom}"></td>
+            <td th:text="${pret.exemplaire.codeExemplaire}"></td>
+            <td th:text="${pret.datePret}"></td>
+            <td th:text="${pret.dateRetourPrevue}"></td>
+            <td th:text="${pret.dateRetourReelle != null ? pret.dateRetourReelle : '---'}"></td>
+            <td th:text="${pret.typePret.nomTypePret}"></td>
+            <td th:text="${pret.estProlonge == 1 ? 'Oui' : 'Non'}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/prets/ajouter}">Ajouter un nouveau prêt</a>
+</body>
+</html>

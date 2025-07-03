@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Liste des Types d’Adhérents</title>
+</head>
+<body>
+    <h2>Liste des Types d’Adhérents</h2>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom du type</th>
+                <th>Quota max prêt</th>
+                <th>Durée max prêt</th>
+                <th>Quota max prolongement</th>
+                <th>Durée max prolongement</th>
+                <th>Créé le</th>
+                <th>Mis à jour le</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="type : ${types}">
+                <td th:text="${type.id}">1</td>
+                <td th:text="${type.nomType}">Etudiant</td>
+                <td th:text="${type.quotaMaxPret}">3</td>
+                <td th:text="${type.dureeMaxPret}">15</td>
+                <td th:text="${type.quotaMaxProlongement}">1</td>
+                <td th:text="${type.dureeMaxProlongement}">7</td>
+                <td th:text="${#temporals.format(type.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2025 12:00</td>
+                <td th:text="${#temporals.format(type.updatedAt, 'dd/MM/yyyy HH:mm')}">05/01/2025 09:00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <a th:href="@{/type-adherents/ajouter}">Ajouter un nouveau type d’adhérent</a>
+</body>
+</html>

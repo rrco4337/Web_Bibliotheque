@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Adhérent</title>
+</head>
+<body>
+<h2>Ajouter un nouvel adhérent</h2>
+
+<form th:action="@{/adherents/ajouter}" th:object="${adherent}" method="post">
+
+    <label for="nom">Nom :</label>
+    <input type="text" th:field="*{nom}" required /><br/>
+
+    <label for="prenom">Prénom :</label>
+    <input type="text" th:field="*{prenom}" /><br/>
+
+    <label for="password">Mot de passe :</label>
+    <input type="password" th:field="*{password}" required /><br/>
+
+    <label for="dateNaissance">Date de naissance :</label>
+    <input type="date" th:field="*{dateNaissance}" required /><br/>
+
+    <label for="dateInscription">Date d'inscription :</label>
+    <input type="date" th:field="*{dateInscription}" required /><br/>
+
+    <label for="typeAdherent">Type d’adhérent :</label>
+    <select th:field="*{typeAdherent}" required>
+        <option th:each="type : ${types}" 
+                th:value="${type.id}" 
+                th:text="${type.nomType}">
+        </option>
+    </select>
+
+    <label for="estAbonne">Est abonné ?</label>
+    <input type="checkbox" th:field="*{estAbonne}" /><br/>
+
+    <label for="estPenalise">Est pénalisé ?</label>
+    <input type="checkbox" th:field="*{estPenalise}" /><br/>
+
+    <button type="submit">Ajouter</button>
+</form>
+
+</body>
+</html>

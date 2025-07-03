@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Type Adhérent</title>
+</head>
+<body>
+    <h2>Ajouter un Type d’Adhérent</h2>
+
+    <form th:action="@{/type-adherents/ajouter}" th:object="${typeAdherent}" method="post">
+        <label for="nomType">Nom du type :</label>
+        <input type="text" id="nomType" th:field="*{nomType}" required/><br/><br/>
+
+        <label for="quotaMaxPret">Quota max prêt :</label>
+        <input type="number" id="quotaMaxPret" th:field="*{quotaMaxPret}" required/><br/><br/>
+
+        <label for="dureeMaxPret">Durée max prêt :</label>
+        <input type="number" id="dureeMaxPret" th:field="*{dureeMaxPret}" required/><br/><br/>
+
+        <label for="quotaMaxProlongement">Quota max prolongement :</label>
+        <input type="number" id="quotaMaxProlongement" th:field="*{quotaMaxProlongement}" required/><br/><br/>
+
+        <label for="dureeMaxProlongement">Durée max prolongement :</label>
+        <input type="number" id="dureeMaxProlongement" th:field="*{dureeMaxProlongement}" required/><br/><br/>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+</body>
+</html>

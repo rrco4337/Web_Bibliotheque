@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Livre</title>
+</head>
+<body>
+    <h2>Ajouter un nouveau livre</h2>
+    <form th:action="@{/livres/ajouter}" th:object="${livre}" method="post" enctype="multipart/form-data">
+        <label for="titre">Titre:</label>
+        <input type="text" th:field="*{titre}" required><br>
+
+        <label for="auteur">Auteur:</label>
+        <input type="text" th:field="*{auteur}"><br>
+
+        <label for="isbn">ISBN:</label>
+        <input type="text" th:field="*{isbn}"><br>
+
+        <label for="datePublication">Date de publication:</label>
+        <input type="date" th:field="*{datePublication}"><br>
+
+        <label for="ageRestriction">Restriction d'âge:</label>
+        <input type="number" th:field="*{ageRestriction}"><br>
+
+        <label for="nbrExmp">Nombre d'exemplaires :</label>
+        <input type="number" th:field="*{nbrExmp}" min="1" value="1" required><br>
+
+        <!-- Champ Description -->
+        <label for="description">Description :</label><br>
+        <textarea th:field="*{description}" rows="4" cols="50"></textarea><br>
+
+        <!-- Champ Image URL (upload) -->
+        <label for="imageUrl">Image :</label>
+        <input type="file" name="imageFile" accept="image/*"><br>
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <a th:href="@{/livres/liste}">Voir la liste des livres</a>
+</body>
+</html>

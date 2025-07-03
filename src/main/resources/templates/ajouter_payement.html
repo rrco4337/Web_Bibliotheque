@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter Type de Paiement</title>
+</head>
+<body>
+<h2>Ajouter un Type de Paiement</h2>
+
+<form th:action="@{/type-payements/ajouter}" th:object="${typePayement}" method="post">
+    <label>Type :</label>
+    <input type="text" th:field="*{typeName}" required/><br/>
+
+    <label>Montant :</label>
+    <input type="number" th:field="*{montantPayement}" required/><br/>
+
+    <label>Durée de validité (en jours) :</label>
+    <input type="number" th:field="*{durreValidite}" /><br/>
+
+    <button type="submit">Enregistrer</button>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Paiement</title>
+</head>
+<body>
+<h2>Ajouter un Paiement</h2>
+
+<form th:action="@{/paiements/ajouter}" th:object="${paiement}" method="post">
+<!-- Sélection d’un adhérent -->
+<select th:field="*{adherent}">
+  <option th:each="a : ${adherents}" th:value="${a.id}" th:text="${a.nom}"></option>
+</select>
+
+<!-- Sélection d’un type de paiement -->
+<select th:field="*{typePayement}">
+  <option th:each="t : ${types}" th:value="${t.id}" th:text="${t.typeName}"></option>
+</select>
+
+
+    <label>Date de paiement :</label>
+    <input type="date" th:field="*{datePaiement}" /><br/>
+
+    <!-- <label>Montant payé :</label>
+    <input type="number" th:field="*{montantPaye}" step="0.01" /><br/> -->
+
+    <!-- <label>Statut :</label>
+    <select th:field="*{statutPaiement}">
+        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s.nomStatut}"></option>
+    </select><br/> -->
+
+    <button type="submit">Enregistrer</button>
+</form>
+</body>
+</html>

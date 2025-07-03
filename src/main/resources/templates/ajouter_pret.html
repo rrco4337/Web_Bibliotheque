@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Prêt</title>
+</head>
+<body>
+<h2>Ajouter un nouveau prêt</h2>
+
+    <form th:action="@{/prets/ajouter}" th:object="${pret}" method="post">
+        <label for="id_adherent">Adhérent :</label>
+        <select th:field="*{adherent}" required>
+            <option th:each="a : ${adherents}" th:value="${a.id}" th:text="|${a.nom} ${a.prenom}|"></option>
+        </select>
+        <br>
+        <label for="datePret">Date du prêt :</label>
+        <input type="date" th:field="*{datePret}" required><br>
+
+    <input type="number" name="idExemplaire" th:value="${idExemplaire}" />
+
+        <label for="typePret">Type de prêt :</label>
+        <select th:field="*{typePret}" required>
+    <option th:each="tp : ${typesPret}" th:value="${tp.id}" th:text="${tp.nomTypePret}"></option>
+        </select>
+        <br> 
+        <button type="submit">Enregistrer</button>
+    </form>
+
+<a th:href="@{/prets/liste}"> Voir les prêts </a>
+</body>
+</html>

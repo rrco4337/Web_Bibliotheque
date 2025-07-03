@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Types de Paiement</title>
+</head>
+<body>
+<h2>Liste des Types de Paiement</h2>
+<a href="/type-payements/ajouter">Ajouter un nouveau type</a>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Montant</th>
+            <th>Durée (jours)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="type : ${typePayements}">
+            <td th:text="${type.id}"></td>
+            <td th:text="${type.typeName}"></td>
+            <td th:text="${type.montantPayement}"></td>
+            <td th:text="${type.durreValidite}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

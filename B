@@ -1,0 +1,75 @@
+
+-- -- Table des cotisations payées
+-- CREATE TABLE Cotisation (
+--     id SERIAL PRIMARY KEY,
+--     id_adherent INT REFERENCES Adherent(id),
+--     mois_cotise DATE NOT NULL,
+--     montant NUMERIC(10, 2) DEFAULT 0.00
+-- );
+
+CREATE TABLE Periode_Cotisation (
+    id SERIAL PRIMARY KEY,
+    periode_name varchar(200) , 
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL
+);
+
+CREATE TABLE Cotisation_Type (
+    id SERIAL PRIMARY KEY,
+    id_periode int REFERENCES Periode_Cotisation(id) , 
+    nom_type VARCHAR(100) NOT NULL UNIQUE,
+    montant_attendu NUMERIC(10,2) NOT NULL
+);
+
+CREATE TABLE Cotisation (
+    id SERIAL PRIMARY KEY,
+    id_adherent INT REFERENCES Adherent(id),
+    id_cotisation_type INT REFERENCES CotisationType(id),
+    date_paiement DATE NOT NULL,
+    montant_paye NUMERIC(10,2) NOT NULL DEFAULT 0.00
+);
+
+
+
+-- 1. Table CotisationType
+ 
+CREATE TABLE CotisationType (
+    id SERIAL PRIMARY KEY,
+    nom_type VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    montant_attendu NUMERIC(10,2) NOT NULL
+);
+-- 2. Table PeriodeCotisation
+
+CREATE TABLE PeriodeCotisation (
+    id SERIAL PRIMARY KEY,
+    nom_periode VARCHAR(100) NOT NULL UNIQUE,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL
+);
+-- 3. Table Cotisation
+
+CREATE TABLE Cotisation (
+    id SERIAL PRIMARY KEY,
+    id_adherent INT REFERENCES Adherent(id) ON DELETE CASCADE,
+    id_cotisation_type INT REFERENCES CotisationType(id) ON DELETE SET NULL,
+    id_periode INT REFERENCES PeriodeCotisation(id) ON DELETE SET NULL,
+    montant_attendu NUMERIC(10,2) NOT NULL
+);
+-- 4. Table StatutPaiement (pour gérer les différents statuts possibles)
+
+CREATE TABLE StatutPaiement (
+    id SERIAL PRIMARY KEY,
+    nom_statut VARCHAR(50) NOT NULL UNIQUE, -- ex : en_attente, valide, rejete, annule
+    description TEXT
+);
+-- 5. Table PaiementCotisation
+
+CREATE TABLE PaiementCotisation (
+    id SERIAL PRIMARY KEY,
+    id_cotisation INT REFERENCES Cotisation(id) ON DELETE CASCADE,
+    date_paiement DATE NOT NULL,
+    montant_paye NUMERIC(10,2) NOT NULL,
+    mode_paiement VARCHAR(50),
+    id_statut_paiement INT REFERENCES StatutPaiement(id)
+);

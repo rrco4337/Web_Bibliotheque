@@ -1,0 +1,39 @@
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Liste des Adhérents</title>
+    </head>
+    <body>
+    <h2>Liste des adhérents</h2>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Date naissance</th>
+            <th>Date inscription</th>
+            <th>Type</th>
+            <th>Abonné</th>
+            <th>Pénalisé</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="adherent : ${adherents}">
+            <td th:text="${adherent.id}"></td>
+            <td th:text="${adherent.nom}"></td>
+            <td th:text="${adherent.prenom}"></td>
+            <td th:text="${adherent.dateNaissance}"></td>
+            <td th:text="${adherent.dateInscription}"></td>
+            <td th:text="${adherent.typeAdherent.nomType}"></td>
+            <td th:text="${adherent.estAbonne ? 'Oui' : 'Non'}"></td>
+            <td th:text="${adherent.estPenalise ? 'Oui' : 'Non'}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/adherents/ajouter}">Ajouter un nouvel adhérent</a>
+    </body>
+    </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Livres</title>
+</head>
+<body>
+    <h2>Liste des livres</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>ISBN</th>
+                <th>Date publication</th>
+                <th>Restriction d'âge</th>
+                <th>Créé le</th>
+                <th>Modifié le</th>
+                <th>Nbr Exemplaire</th>
+                <th>Exemplaires</th> <!-- ✅ Colonne ajoutée -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="livre : ${livres}">
+                <td th:text="${livre.id}"></td>
+                <td th:text="${livre.titre}"></td>
+                <td th:text="${livre.auteur}"></td>
+                <td th:text="${livre.isbn}"></td>
+                <td th:text="${livre.datePublication}"></td>
+                <td th:text="${livre.ageRestriction}"></td>
+                <td th:text="${livre.createdAt}"></td>
+                <td th:text="${livre.updatedAt}"></td>
+                <td th:text="${livre.nbrExmp}"></td>
+                <td>
+                    <a th:href="@{'/livres/livre/' + ${livre.id}}">Voir</a> <!-- ✅ Lien vers les exemplaires -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/livres/ajouter}">Ajouter un nouveau livre</a>
+</body>
+</html>

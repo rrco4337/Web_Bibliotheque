@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des exemplaires</title>
+</head>
+<body>
+    <h2>Liste des exemplaires du livre</h2>
+
+    <!-- Description du livre à partir du premier exemplaire -->
+    <div th:if="${#lists.isEmpty(exemplaires) == false}">
+        <h3 th:text="${exemplaires[0].livre.titre}">Titre du livre</h3>
+        <p><strong>Auteur :</strong> <span th:text="${exemplaires[0].livre.auteur}">Auteur</span></p>
+        <p><strong>Description :</strong> <span th:text="${exemplaires[0].livre.description}">Description du livre</span></p>
+        <p><strong>ISBN :</strong> <span th:text="${exemplaires[0].livre.isbn}">ISBN</span></p>
+        <p><strong>Date de publication :</strong> <span th:text="${exemplaires[0].livre.datePublication}">Date</span></p>
+        <img width="200" weight="200" th:src="@{'/uploads/' + ${exemplaires[0].livre.imageUrl}}" alt="Image du livre">
+    </div>
+
+    <div th:if="${#lists.isEmpty(exemplaires)}">
+        <p>Aucun exemplaire trouvé pour ce livre.</p>
+    </div>
+
+    <table border="1" th:if="${#lists.isEmpty(exemplaires) == false}">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Code Exemplaire</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ex : ${exemplaires}">
+                <td th:text="${ex.id}"></td>
+                <td th:text="${ex.codeExemplaire}"></td>
+                <td th:text="${ex.statutPret.nomStatut}"></td>
+                <td>
+                    <a th:href="@{/prets/NewPret(idExemplaire=${ex.id})}">Prêter</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/livres/liste}">Retour à la liste des livres</a>
+</body>
+</html>

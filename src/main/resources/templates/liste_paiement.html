@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Paiements</title>
+</head>
+<body>
+<h2>Liste des Paiements</h2>
+<a href="/paiements/ajouter">Ajouter un paiement</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Adhérent</th>
+        <th>Type Paiement</th>
+        <th>Date</th>
+        <th>Montant</th>
+        <th>Statut</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${paiements}">
+        <td th:text="${p.adherent.nom}"></td>
+        <td th:text="${p.typePayement.typeName}"></td>
+        <td th:text="${p.datePaiement}"></td>
+        <td th:text="${p.montantPaye}"></td>
+        <td th:text="${p.statutPaiement?.nomStatut}">-</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
