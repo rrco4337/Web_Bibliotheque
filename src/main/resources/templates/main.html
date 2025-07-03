@@ -1,29 +1,147 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="corporate">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter un Type Adhérent</title>
+    <title>Ajouter un Type d'Adhérent</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind avec daisyUI -->
+    <script>
+        tailwind.config = {
+            plugins: [require("daisyui")],
+            daisyui: {
+                themes: ["corporate", "business", "luxury"],
+            },
+        }
+    </script>
+    
+    <!-- DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        .form-card {
+            @apply card bg-white shadow-xl;
+            max-width: 800px;
+        }
+        .form-input {
+            @apply input input-bordered w-full focus:input-primary;
+        }
+        .form-label {
+            @apply block text-sm font-medium text-gray-700 mb-1;
+        }
+        .form-section {
+            @apply mb-6 p-6 bg-base-100 rounded-lg;
+        }
+    </style>
 </head>
-<body>
-    <h2>Ajouter un Type d’Adhérent</h2>
-
-    <form th:action="@{/type-adherents/ajouter}" th:object="${typeAdherent}" method="post">
-        <label for="nomType">Nom du type :</label>
-        <input type="text" id="nomType" th:field="*{nomType}" required/><br/><br/>
-
-        <label for="quotaMaxPret">Quota max prêt :</label>
-        <input type="number" id="quotaMaxPret" th:field="*{quotaMaxPret}" required/><br/><br/>
-
-        <label for="dureeMaxPret">Durée max prêt :</label>
-        <input type="number" id="dureeMaxPret" th:field="*{dureeMaxPret}" required/><br/><br/>
-
-        <label for="quotaMaxProlongement">Quota max prolongement :</label>
-        <input type="number" id="quotaMaxProlongement" th:field="*{quotaMaxProlongement}" required/><br/><br/>
-
-        <label for="dureeMaxProlongement">Durée max prolongement :</label>
-        <input type="number" id="dureeMaxProlongement" th:field="*{dureeMaxProlongement}" required/><br/><br/>
-
-        <button type="submit">Enregistrer</button>
-    </form>
+<body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div class="form-card">
+        <div class="card-body">
+            <!-- En-tête -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-user-plus text-primary mr-2"></i> Nouveau Type d'Adhérent
+                    </h1>
+                    <p class="text-gray-600">Remplissez les informations pour créer un nouveau type d'adhérent</p>
+                </div>
+                <a th:href="@{/type-adherents/liste}" class="btn btn-ghost">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour
+                </a>
+            </div>
+            
+            <!-- Formulaire -->
+            <form th:action="@{/type-adherents/ajouter}" th:object="${typeAdherent}" method="post" class="space-y-6">
+                <!-- Section Informations de base -->
+                <div class="form-section">
+                    <h2 class="text-lg font-semibold mb-4 text-primary">
+                        <i class="fas fa-info-circle mr-2"></i> Informations générales
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nom du type -->
+                        <div>
+                            <label for="nomType" class="form-label">Nom du type</label>
+                            <input type="text" id="nomType" th:field="*{nomType}" 
+                                   class="form-input" placeholder="Ex: Étudiant, Professeur..." required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Paramètres de prêt -->
+                <div class="form-section">
+                    <h2 class="text-lg font-semibold mb-4 text-secondary">
+                        <i class="fas fa-book-reader mr-2"></i> Paramètres de prêt
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Quota max prêt -->
+                        <div>
+                            <label for="quotaMaxPret" class="form-label">Nombre maximum de prêts</label>
+                            <div class="relative">
+                                <input type="number" id="quotaMaxPret" th:field="*{quotaMaxPret}" 
+                                       class="form-input pr-12" min="1" required>
+                                <span class="absolute right-3 top-3 text-gray-500">livres</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Durée max prêt -->
+                        <div>
+                            <label for="dureeMaxPret" class="form-label">Durée maximale de prêt</label>
+                            <div class="relative">
+                                <input type="number" id="dureeMaxPret" th:field="*{dureeMaxPret}" 
+                                       class="form-input pr-12" min="1" required>
+                                <span class="absolute right-3 top-3 text-gray-500">jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Prolongements -->
+                <div class="form-section">
+                    <h2 class="text-lg font-semibold mb-4 text-accent">
+                        <i class="fas fa-calendar-plus mr-2"></i> Paramètres de prolongement
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Quota max prolongement -->
+                        <div>
+                            <label for="quotaMaxProlongement" class="form-label">Nombre maximum de prolongements</label>
+                            <div class="relative">
+                                <input type="number" id="quotaMaxProlongement" th:field="*{quotaMaxProlongement}" 
+                                       class="form-input pr-12" min="0" required>
+                                <span class="absolute right-3 top-3 text-gray-500">fois</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Durée max prolongement -->
+                        <div>
+                            <label for="dureeMaxProlongement" class="form-label">Durée maximale de prolongement</label>
+                            <div class="relative">
+                                <input type="number" id="dureeMaxProlongement" th:field="*{dureeMaxProlongement}" 
+                                       class="form-input pr-12" min="1" required>
+                                <span class="absolute right-3 top-3 text-gray-500">jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons de soumission -->
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="reset" class="btn btn-outline btn-error">
+                        <i class="fas fa-times mr-2"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
