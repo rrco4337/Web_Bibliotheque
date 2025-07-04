@@ -3,39 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des Prêts</title>
+    <!-- Ajout de Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h2>Liste des prêts</h2>
+<body class="bg-gray-50 min-h-screen p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Liste des prêts</h2>
+            <a th:href="@{/prets/ajouter}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Ajouter un nouveau prêt
+            </a>
+        </div>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Adhérent</th>
-            <th>Exemplaire</th>
-            <th>Date du prêt</th>
-            <th>Date retour prévue</th>
-            <th>Date retour réelle</th>
-            <th>Type de prêt</th>
-            <th>Prolongé</th>
-            <th>Statut</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="pret : ${prets}">
-            <td th:text="${pret.id}"></td>
-            <td th:text="${pret.adherent.nom} + ' ' + ${pret.adherent.prenom}"></td>
-            <td th:text="${pret.exemplaire.codeExemplaire}"></td>
-            <td th:text="${pret.datePret}"></td>
-            <td th:text="${pret.dateRetourPrevue}"></td>
-            <td th:text="${pret.dateRetourReelle != null ? pret.dateRetourReelle : '---'}"></td>
-            <td th:text="${pret.typePret.nomTypePret}"></td>
-            <td th:text="${pret.estProlonge == 1 ? 'Oui' : 'Non'}"></td>
-        </tr>
-    </tbody>
-</table>
-
-<br>
-<a th:href="@{/prets/ajouter}">Ajouter un nouveau prêt</a>
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adhérent</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exemplaire</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date du prêt</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date retour prévue</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date retour réelle</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type de prêt</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prolongé</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr th:each="pret : ${prets}" class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.id}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.adherent.nom} + ' ' + ${pret.adherent.prenom}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.exemplaire.codeExemplaire}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.datePret}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.dateRetourPrevue}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.dateRetourReelle != null ? pret.dateRetourReelle : '---'}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.typePret.nomTypePret}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${pret.estProlonge == 1 ? 'Oui' : 'Non'}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span th:if="${pret.dateRetourReelle == null}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    En cours
+                                </span>
+                                <span th:if="${pret.dateRetourReelle != null}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Retourné
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

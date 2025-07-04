@@ -18,7 +18,10 @@ import gestion.bibliotheque.repository.StatutPretRepository;
 import gestion.bibliotheque.service.AdherentRestrictionException;
 import gestion.bibliotheque.service.AdherentService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -119,17 +122,21 @@ public String enregistrerPret(@ModelAttribute Pret pret, @RequestParam("idExempl
         int ageRestriction = livre.getAgeRestriction() != null ? livre.getAgeRestriction() : 0;
             System.out.println("---"+ageAdherent +"-"+ageRestriction+"---" );
 
-        if (ageAdherent < ageRestriction) {
-            System.out.println("Âge insuffisant pour emprunter ce livre." );
-            return "redirect:/prets/liste";
-        }
+       if (ageAdherent < ageRestriction) {
+    System.out.println("Âge insuffisant pour emprunter ce livre." );
+    return "redirect:/prets/liste";
+}
 
         // Calculer la date de retour prévue
         int dureePret = typeAdherent.getDureeMaxPret(); // assure-toi qu'elle existe
         if (pret.getDatePret() != null && pret.getTypePret() != null) {
             pret.setDateRetourPrevue(pret.getDatePret().plusDays(dureePret));
         }
-
+    StatutPret statutIndisponible = statutPretRepository.findById(2L).orElse(null);
+    if (statutIndisponible != null) {
+        exemplaire.setStatutPret(statutIndisponible);
+        exemplaireRepository.save(exemplaire);
+    }
         // Sauvegarder
         pretRepository.save(pret);
         return "redirect:/prets/liste";
@@ -140,7 +147,58 @@ public String enregistrerPret(@ModelAttribute Pret pret, @RequestParam("idExempl
     }
 }
 
+@GetMapping("/retour/formulaire")
+public String afficherFormulaireRetour(Model model) {
+    // 1. Récupérer tous les prêts en cours (ceux qui n'ont pas de date de retour)
+    List<Pret> pretsEnCours = pretRepository.findByDateRetourReelleIsNull();
+    
+    // 2. Ajouter cette liste au modèle pour l'envoyer à la vue
+    model.addAttribute("pretsEnCours", pretsEnCours);
+    
+    // 3. Retourner le nom du fichier HTML qui contiendra le formulaire
+    return "formulaire_retour_pret"; // Nommez ce fichier comme vous le souhaitez
+}
+// Dans PretController.java
 
+@PostMapping("/retour")
+public String retourPret(
+        @RequestParam("idPret") Long idPret, // On reçoit directement l'ID du prêt
+        @RequestParam("dateRetourReelle") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate dateRetourReelle
+) {
+    // 1. Trouver le prêt directement par son ID
+    Pret pret = pretRepository.findById(idPret).orElse(null);
+    if (pret == null) {
+        System.out.println("Prêt non trouvé pour l'ID : " + idPret);
+        // Vous pouvez ajouter un message d'erreur pour l'utilisateur ici
+        return "redirect:/prets/liste";
+    }
+
+    // Sécurité : Vérifier que le prêt n'a pas déjà été retourné
+    if (pret.getDateRetourReelle() != null) {
+        System.out.println("Ce prêt a déjà été retourné.");
+        return "redirect:/prets/liste";
+    }
+
+    // 2. Mettre à jour la date de retour réelle sur l'objet Pret
+    pret.setDateRetourReelle(dateRetourReelle);
+    pretRepository.save(pret);
+
+    // 3. Récupérer l'exemplaire associé au prêt
+    Exemplaire exemplaire = pret.getExemplaire();
+
+    // 4. Mettre à jour le statut de l'exemplaire à "disponible" (statut ID 1)
+    StatutPret statutDisponible = statutPretRepository.findById(1L).orElse(null);
+    if (statutDisponible != null) {
+        exemplaire.setStatutPret(statutDisponible);
+        exemplaireRepository.save(exemplaire);
+    } else {
+        // Gérer le cas où le statut "Disponible" n'existe pas dans la BDD
+        System.out.println("ERREUR : Le statut 'Disponible' (ID 1) est introuvable.");
+    }
+
+    // Rediriger vers la liste des prêts (ou une page de confirmation)
+    return "redirect:/prets/liste";
+}
 }
 
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Retourner un livre</title>
+    <!-- Ajoutez ici vos liens CSS (Bootstrap, etc.) -->
+</head>
+<body>
+    <div class="container">
+        <h1>Enregistrer un retour de livre</h1>
+
+        <form th:action="@{/prets/retour}" method="post">
+            
+            <!-- Champ 1: La liste déroulante des prêts en cours -->
+            <div class="mb-3">
+                <label for="idPret" class="form-label">Livre à retourner :</label>
+                <select id="idPret" name="idPret" class="form-select" required>
+                    <option value="">-- Choisissez un prêt --</option>
+                    <!-- On boucle sur la liste des prêts envoyée par le contrôleur -->
+                    <th:block th:each="pret : ${pretsEnCours}">
+                        <!-- 
+                           - La valeur de l'option est l'ID du prêt. C'est ce qui sera envoyé au backend.
+                           - Le texte affiché est plus descriptif pour l'utilisateur.
+                        -->
+                        <option th:value="${pret.id}" 
+                                th:text="${pret.exemplaire.livre.titre + ' - Prêté à ' + pret.adherent.prenom + ' ' + pret.adherent.nom}">
+                        </option>
+                    </th:block>
+                </select>
+            </div>
+
+            <!-- Champ 2: La date de retour -->
+            <div class="mb-3">
+                <label for="dateRetourReelle" class="form-label">Date de retour réelle :</label>
+                <input type="date" id="dateRetourReelle" name="dateRetourReelle" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enregistrer le retour</button>
+        </form>
+    </div>
+</body>
+</html>

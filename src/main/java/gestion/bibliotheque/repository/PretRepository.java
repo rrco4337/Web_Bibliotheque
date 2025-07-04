@@ -11,4 +11,5 @@ public interface PretRepository extends JpaRepository<Pret, Long> {
     List<Pret> findByAdherentId(Long idAdherent);
     List<Pret> findByStatutNomStatut(String nomStatut);
     List<Pret> findByDateRetourReelleIsNull(); // Prêts en cours
+    Pret findByExemplaireIdAndAdherentIdAndDateRetourReelleIsNull(Long idExemplaire, Long idAdherent);
 }
