@@ -1,45 +1,200 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="luxury">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter un Adhérent</title>
+    <title>Nouvel Adhérent | Bibliothèque Municipale</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind avec daisyUI -->
+    <script>
+        tailwind.config = {
+            plugins: [require("daisyui")],
+            daisyui: {
+                themes: ["luxury", "business", "corporate"],
+            },
+        }
+    </script>
+    
+    <!-- DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <style>
+        .form-container {
+            @apply max-w-4xl mx-auto bg-base-100 rounded-2xl shadow-2xl overflow-hidden;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .form-header {
+            @apply bg-gradient-to-r from-primary to-secondary text-white p-6;
+        }
+        .form-body {
+            @apply p-8 space-y-6;
+        }
+        .form-group {
+            @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+        }
+        .form-control {
+            @apply flex flex-col space-y-2;
+        }
+        .form-label {
+            @apply text-sm font-medium text-base-content/80 flex items-center;
+        }
+        .form-input {
+            @apply input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent;
+        }
+        .form-select {
+            @apply select select-bordered w-full;
+        }
+        .form-checkbox {
+            @apply toggle toggle-primary;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body>
-<h2>Ajouter un nouvel adhérent</h2>
+<body class="min-h-screen bg-base-200 flex items-center justify-center p-4">
+    <div class="form-container animate__animated animate__fadeInUp">
+        <!-- Header -->
+        <div class="form-header">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold">
+                        <i class="fas fa-user-plus mr-3"></i> Nouvel Adhérent
+                    </h1>
+                    <p class="opacity-90">Remplissez les informations pour créer un nouveau membre</p>
+                </div>
+                <a th:href="@{/adherents/liste}" class="btn btn-ghost btn-circle">
+                    <i class="fas fa-times text-xl"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Formulaire -->
+        <form th:action="@{/adherents/ajouter}" th:object="${adherent}" method="post" class="form-body">
+            <!-- Section Identité -->
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="nom" class="form-label">
+                        <i class="fas fa-user-tag mr-2"></i> Nom
+                    </label>
+                    <input type="text" id="nom" th:field="*{nom}" class="form-input" placeholder="Dupont" required>
+                </div>
+                
+                <div class="form-control">
+                    <label for="prenom" class="form-label">
+                        <i class="fas fa-user mr-2"></i> Prénom
+                    </label>
+                    <input type="text" id="prenom" th:field="*{prenom}" class="form-input" placeholder="Jean">
+                </div>
+            </div>
+            
+            <!-- Section Sécurité -->
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock mr-2"></i> Mot de passe
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password" th:field="*{password}" class="form-input pr-10" required>
+                        <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section Dates -->
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="dateNaissance" class="form-label">
+                        <i class="fas fa-birthday-cake mr-2"></i> Date de naissance
+                    </label>
+                    <input type="date" id="dateNaissance" th:field="*{dateNaissance}" class="form-input" required>
+                </div>
+                
+                <div class="form-control">
+                    <label for="dateInscription" class="form-label">
+                        <i class="fas fa-calendar-check mr-2"></i> Date d'inscription
+                    </label>
+                    <input type="date" id="dateInscription" th:field="*{dateInscription}" class="form-input" required>
+                </div>
+            </div>
+            
+            <!-- Section Type -->
+            <div class="form-control">
+                <label for="typeAdherent" class="form-label">
+                    <i class="fas fa-id-card mr-2"></i> Type d'adhérent
+                </label>
+                <select id="typeAdherent" th:field="*{typeAdherent}" class="form-select" required>
+                    <option value="" disabled selected>Sélectionnez un type</option>
+                    <option th:each="type : ${types}" 
+                            th:value="${type.id}" 
+                            th:text="${type.nomType}">
+                    </option>
+                </select>
+            </div>
+            
+            <!-- Section Statuts -->
+            <div class="form-group pt-4">
+                <div class="form-control flex-row items-center justify-between">
+                    <label for="estAbonne" class="form-label">
+                        <i class="fas fa-star mr-2"></i> Abonné ?
+                    </label>
+                    <input type="checkbox" id="estAbonne" th:field="*{estAbonne}" class="form-checkbox">
+                </div>
+                
+                <div class="form-control flex-row items-center justify-between">
+                    <label for="estPenalise" class="form-label">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Pénalisé ?
+                    </label>
+                    <input type="checkbox" id="estPenalise" th:field="*{estPenalise}" class="form-checkbox">
+                </div>
+            </div>
+            
+            <!-- Boutons -->
+            <div class="flex justify-end space-x-4 pt-8">
+                <button type="reset" class="btn btn-outline btn-error">
+                    <i class="fas fa-eraser mr-2"></i> Réinitialiser
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-2"></i> Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
 
-<form th:action="@{/adherents/ajouter}" th:object="${adherent}" method="post">
-
-    <label for="nom">Nom :</label>
-    <input type="text" th:field="*{nom}" required /><br/>
-
-    <label for="prenom">Prénom :</label>
-    <input type="text" th:field="*{prenom}" /><br/>
-
-    <label for="password">Mot de passe :</label>
-    <input type="password" th:field="*{password}" required /><br/>
-
-    <label for="dateNaissance">Date de naissance :</label>
-    <input type="date" th:field="*{dateNaissance}" required /><br/>
-
-    <label for="dateInscription">Date d'inscription :</label>
-    <input type="date" th:field="*{dateInscription}" required /><br/>
-
-    <label for="typeAdherent">Type d’adhérent :</label>
-    <select th:field="*{typeAdherent}" required>
-        <option th:each="type : ${types}" 
-                th:value="${type.id}" 
-                th:text="${type.nomType}">
-        </option>
-    </select>
-
-    <label for="estAbonne">Est abonné ?</label>
-    <input type="checkbox" th:field="*{estAbonne}" /><br/>
-
-    <label for="estPenalise">Est pénalisé ?</label>
-    <input type="checkbox" th:field="*{estPenalise}" /><br/>
-
-    <button type="submit">Ajouter</button>
-</form>
-
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('#password + button i');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+        
+        // Date d'inscription par défaut = aujourd'hui
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInscription').value = today;
+        });
+    </script>
 </body>
 </html>
