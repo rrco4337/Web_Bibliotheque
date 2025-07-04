@@ -15,4 +15,5 @@ public interface PenaliteRepository extends JpaRepository<Penalite, Long> {
     List<Penalite> findByAdherentId(Long adherentId);
     @Query("SELECT p FROM Penalite p WHERE p.adherent = :adherent AND :currentDate BETWEEN p.dateDebut AND p.dateFin")
     List<Penalite> findActivePenalitesForAdherent(@Param("adherent") Adherent adherent, @Param("currentDate") LocalDate currentDate);
+    List<Penalite> findByAdherent(Adherent adherent);
 }

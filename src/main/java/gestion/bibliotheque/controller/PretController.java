@@ -93,12 +93,17 @@ public class PretController {
         
         // ================= DEBUT DE LA MODIFICATION (Vérification de pénalité) =================
         // Vérifier si l'adhérent a une pénalité active
-        List<Penalite> penalitesActives = penaliteRepository.findActivePenalitesForAdherent(adherent, LocalDate.now());
-        if (!penalitesActives.isEmpty()) {
-            Penalite penalite = penalitesActives.get(0); // On prend la première pénalité trouvée
-            System.out.println("Prêt refusé : L'adhérent " + adherent.getNom() + " est suspendu jusqu'au " + penalite.getDateFin());
-            // Idéalement, ici, il faudrait renvoyer un message d'erreur à l'utilisateur sur la page.
-            return "redirect:/prets/liste"; // Ou vers une page d'erreur
+        List<Penalite> penalites = penaliteRepository.findByAdherent(adherent);
+        LocalDate datePret = pret.getDatePret();
+        if (datePret == null) {
+            System.out.println("Date de prêt non fournie.");
+            return "redirect:/prets/liste";
+        }
+        for (Penalite penalite : penalites) {
+            if (!datePret.isAfter(penalite.getDateFin())) { // datePret <= dateFin
+                System.out.println("Prêt refusé : L'adhérent " + adherent.getNom() + " est suspendu jusqu'au " + penalite.getDateFin());
+                return "redirect:/prets/liste";
+            }
         }
         // ================= FIN DE LA MODIFICATION ============================================
 
