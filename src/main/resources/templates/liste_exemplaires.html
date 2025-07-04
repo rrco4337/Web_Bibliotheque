@@ -3,44 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des exemplaires</title>
+    <!-- Ajout de Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Liste des exemplaires du livre</h2>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Liste des exemplaires du livre</h2>
 
-    <!-- Description du livre à partir du premier exemplaire -->
-    <div th:if="${#lists.isEmpty(exemplaires) == false}">
-        <h3 th:text="${exemplaires[0].livre.titre}">Titre du livre</h3>
-        <p><strong>Auteur :</strong> <span th:text="${exemplaires[0].livre.auteur}">Auteur</span></p>
-        <p><strong>Description :</strong> <span th:text="${exemplaires[0].livre.description}">Description du livre</span></p>
-        <p><strong>ISBN :</strong> <span th:text="${exemplaires[0].livre.isbn}">ISBN</span></p>
-        <p><strong>Date de publication :</strong> <span th:text="${exemplaires[0].livre.datePublication}">Date</span></p>
-        <img width="200" weight="200" th:src="@{'/uploads/' + ${exemplaires[0].livre.imageUrl}}" alt="Image du livre">
+        <!-- Description du livre à partir du premier exemplaire -->
+        <div th:if="${#lists.isEmpty(exemplaires) == false}" class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <img class="w-48 h-auto rounded-md shadow-sm" th:src="@{'/uploads/' + ${exemplaires[0].livre.imageUrl}}" alt="Image du livre">
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2" th:text="${exemplaires[0].livre.titre}">Titre du livre</h3>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Auteur :</strong> <span th:text="${exemplaires[0].livre.auteur}">Auteur</span></p>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">Description :</strong> <span class="italic" th:text="${exemplaires[0].livre.description}">Description du livre</span></p>
+                    <p class="text-gray-600 mb-1"><strong class="text-gray-800">ISBN :</strong> <span th:text="${exemplaires[0].livre.isbn}">ISBN</span></p>
+                    <p class="text-gray-600"><strong class="text-gray-800">Date de publication :</strong> <span th:text="${exemplaires[0].livre.datePublication}">Date</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(exemplaires)}" class="bg-white rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-600">Aucun exemplaire trouvé pour ce livre.</p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(exemplaires) == false}" class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code Exemplaire</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr th:each="ex : ${exemplaires}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ex.id}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ex.codeExemplaire}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${ex.statutPret.nomStatut}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a th:href="@{/prets/NewPret(idExemplaire=${ex.id})}" class="text-indigo-600 hover:text-indigo-900 font-medium">Prêter</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a th:href="@{/livres/liste}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Retour à la liste des livres
+        </a>
     </div>
-
-    <div th:if="${#lists.isEmpty(exemplaires)}">
-        <p>Aucun exemplaire trouvé pour ce livre.</p>
-    </div>
-
-    <table border="1" th:if="${#lists.isEmpty(exemplaires) == false}">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Code Exemplaire</th>
-                <th>Statut</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="ex : ${exemplaires}">
-                <td th:text="${ex.id}"></td>
-                <td th:text="${ex.codeExemplaire}"></td>
-                <td th:text="${ex.statutPret.nomStatut}"></td>
-                <td>
-                    <a th:href="@{/prets/NewPret(idExemplaire=${ex.id})}">Prêter</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/livres/liste}">Retour à la liste des livres</a>
 </body>
 </html>
