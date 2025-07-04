@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Retourner un livre</title>
-    <!-- Ajoutez ici vos liens CSS (Bootstrap, etc.) -->
+    <!-- Ajout de Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Enregistrer un retour de livre</h1>
+<body class="bg-gray-50 min-h-screen p-6">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Enregistrer un retour de livre</h1>
 
-        <form th:action="@{/prets/retour}" method="post">
-            
-            <!-- Champ 1: La liste déroulante des prêts en cours -->
-            <div class="mb-3">
-                <label for="idPret" class="form-label">Livre à retourner :</label>
-                <select id="idPret" name="idPret" class="form-select" required>
+        <form th:action="@{/prets/retour}" method="post" class="space-y-6">
+            <!-- Liste déroulante des prêts en cours -->
+            <div>
+                <label for="idPret" class="block text-sm font-medium text-gray-700">Livre à retourner :</label>
+                <select id="idPret" name="idPret" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
                     <option value="">-- Choisissez un prêt --</option>
-                    <!-- On boucle sur la liste des prêts envoyée par le contrôleur -->
                     <th:block th:each="pret : ${pretsEnCours}">
-                        <!-- 
-                           - La valeur de l'option est l'ID du prêt. C'est ce qui sera envoyé au backend.
-                           - Le texte affiché est plus descriptif pour l'utilisateur.
-                        -->
                         <option th:value="${pret.id}" 
                                 th:text="${pret.exemplaire.livre.titre + ' - Prêté à ' + pret.adherent.prenom + ' ' + pret.adherent.nom}">
                         </option>
@@ -29,13 +25,20 @@
                 </select>
             </div>
 
-            <!-- Champ 2: La date de retour -->
-            <div class="mb-3">
-                <label for="dateRetourReelle" class="form-label">Date de retour réelle :</label>
-                <input type="date" id="dateRetourReelle" name="dateRetourReelle" class="form-control" required>
+            <!-- Date de retour -->
+            <div>
+                <label for="dateRetourReelle" class="block text-sm font-medium text-gray-700">Date de retour réelle :</label>
+                <input type="date" id="dateRetourReelle" name="dateRetourReelle" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
             </div>
 
-            <button type="submit" class="btn btn-primary">Enregistrer le retour</button>
+            <!-- Bouton de soumission -->
+            <div class="flex justify-center pt-4">
+                <button type="submit" 
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Enregistrer le retour
+                </button>
+            </div>
         </form>
     </div>
 </body>
