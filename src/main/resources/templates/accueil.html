@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Adhérent</title>
+</head>
+<body>
+    <h1>Bienvenue, <span th:text="${adherent.prenom}"></span> !</h1>
+    <h2>Votre tableau de bord</h2>
+    <ul>
+        <li>Livres empruntés en cours : <span th:text="${nbPrets}"></span></li>
+        <li>Quota maximum de prêts : <span th:text="${quotaMax}"></span></li>
+        <li>Quota restant : <span th:text="${quotaRestant}"></span></li>
+        <li>
+            Statut pénalité :
+            <span th:if="${estPenalise}" style="color:red;">Pénalisé</span>
+            <span th:unless="${estPenalise}" style="color:green;">Aucune pénalité</span>
+        </li>
+    </ul>
+</body>
+</html>

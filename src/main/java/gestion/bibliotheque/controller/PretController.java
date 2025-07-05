@@ -122,7 +122,13 @@ public class PretController {
                 System.out.println("Âge insuffisant pour emprunter ce livre.");
                 return "redirect:/prets/liste";
             }
-
+             // Vérification du quota max de prêts
+            int quotaMaxPret = typeAdherent.getQuotaMaxPret();
+            int nbPretsEnCours = pretRepository.countByAdherentAndDateRetourReelleIsNull(adherent);
+            if (nbPretsEnCours >= quotaMaxPret) {
+                System.out.println("Quota de prêts atteint pour l'adhérent " + adherent.getNom());
+                return "redirect:/prets/liste";
+            }
             int dureePret = typeAdherent.getDureeMaxPret();
             if (pret.getDatePret() != null && pret.getTypePret() != null) {
                 pret.setDateRetourPrevue(pret.getDatePret().plusDays(dureePret));

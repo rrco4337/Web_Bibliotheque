@@ -16,6 +16,7 @@ public interface AdherentRepository extends JpaRepository<Adherent, Long> {
 
     @Query("SELECT a FROM Adherent a JOIN FETCH a.typeAdherent WHERE a.id = :id")
     Optional<Adherent> findAdherentWithTypeById(@Param("id") Long id);
+    Adherent findByPrenomAndPassword(String prenom, String password);
 
 
 }
