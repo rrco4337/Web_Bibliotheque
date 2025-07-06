@@ -20,6 +20,7 @@ public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
 
     @Query("SELECT e FROM Exemplaire e JOIN FETCH e.livre l JOIN FETCH e.statutPret sp WHERE l.id = :idLivre")
     List<Exemplaire> findByLivreIdWithStatut(@Param("idLivre") Long idLivre);
+List<Exemplaire> findByStatutPret_NomStatutIgnoreCase(String nomStatut);
     
 
     //     @Query(value = "SELECT * FROM Exemplaire ex JOIN Livre l ON ex.id_livre = l.id JOIN Statut_Pret sp ON ex.id_status = sp.id_statut_pret WHERE l.id = :idLivre", nativeQuery = true)

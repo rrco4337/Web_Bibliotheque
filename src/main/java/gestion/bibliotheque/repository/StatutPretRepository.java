@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface StatutPretRepository extends JpaRepository<StatutPret, Long> {
-    Optional<StatutPret> findByNomStatut(String nomStatut);
+
+     StatutPret findByNomStatut(String nomStatut);
 }
