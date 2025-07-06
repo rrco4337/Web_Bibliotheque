@@ -1,21 +1,169 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Adhérent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#137C8B',
+                        secondary: '#709CA7',
+                        light: '#B8CBD0',
+                        accent: '#7A90A4',
+                        dark: '#344D59',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenue, <span th:text="${adherent.prenom}"></span> !</h1>
-    <h2>Votre tableau de bord</h2>
-    <ul>
-        <li>Livres empruntés en cours : <span th:text="${nbPrets}"></span></li>
-        <li>Quota maximum de prêts : <span th:text="${quotaMax}"></span></li>
-        <li>Quota restant : <span th:text="${quotaRestant}"></span></li>
-        <li>
-            Statut pénalité :
-            <span th:if="${estPenalise}" style="color:red;">Pénalisé</span>
-            <span th:unless="${estPenalise}" style="color:green;">Aucune pénalité</span>
-        </li>
-    </ul>
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <div class="navbar bg-primary text-primary-content">
+            <div class="flex-1">
+                <a class="btn btn-ghost normal-case text-xl">Bibliothèque</a>
+            </div>
+            <div class="flex-none">
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full bg-secondary flex items-center justify-center">
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Sidebar -->
+                <div class="w-full md:w-1/4 lg:w-1/5">
+                    <div class="card bg-base-100 shadow-md">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="avatar placeholder">
+                                    <div class="w-16 rounded-full bg-secondary text-neutral-content">
+                                        <span class="text-2xl" th:text="${adherent.prenom.substring(0, 1) + adherent.nom.substring(0, 1)}"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold" th:text="${adherent.prenom}"></h3>
+                                    <p class="text-sm text-accent">Adhérent</p>
+                                </div>
+                            </div>
+                            <ul class="menu p-0">
+                                <li><a class="active">Tableau de bord</a></li>
+                                <li><a>Mes emprunts</a></li>
+                                <li><a>Historique</a></li>
+                                <li><a>Paramètres</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div class="w-full md:w-3/4 lg:w-4/5">
+                    <h1 class="text-3xl font-bold text-dark mb-2">Bonjour, <span th:text="${adherent.prenom}"></span> !</h1>
+                    <p class="text-accent mb-6">Voici votre tableau de bord personnel</p>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="card bg-primary text-primary-content shadow-md">
+                            <div class="card-body">
+                                <h2 class="card-title">Livres empruntés</h2>
+                                <p class="text-4xl font-bold" th:text="${nbPrets}"></p>
+                                <div class="card-actions justify-end">
+                                    <div class="badge badge-outline" th:text="'sur ' + ${quotaMax}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card bg-secondary text-primary-content shadow-md">
+                            <div class="card-body">
+                                <h2 class="card-title">Quota restant</h2>
+                                <p class="text-4xl font-bold" th:text="${quotaRestant}"></p>
+                            </div>
+                        </div>
+
+                        <div class="card" th:classappend="${estPenalise} ? 'bg-error text-error-content' : 'bg-success text-success-content'">
+                            <div class="card-body">
+                                <h2 class="card-title">Statut</h2>
+                                <p class="text-2xl font-bold" th:text="${estPenalise} ? 'Pénalisé' : 'Aucune pénalité'"></p>
+                                <div class="card-actions justify-end">
+                                    <span th:if="${estPenalise}" class="text-sm">Veuillez contacter la bibliothèque</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Livres disponibles à la réservation</h2>
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="exemplaire : ${exemplairesDisponibles}">
+                    <td th:text="${exemplaire.livre.titre}">Titre</td>
+                    <td th:text="${exemplaire.livre.auteur}">Auteur</td>
+                   <td>
+    <form th:action="@{/reservations/reserver}" method="post" style="display:inline;">
+        <input type="hidden" name="idExemplaire" th:value="${exemplaire.id}" />
+        <button type="submit" class="btn btn-primary btn-sm">Réserver</button>
+    </form>
+</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Mes prêts en cours</h2>
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date retour prévue</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pret : ${pretsEnCours}">
+                    <td th:text="${pret.exemplaire.livre.titre}">Titre</td>
+                    <td th:text="${pret.exemplaire.livre.auteur}">Auteur</td>
+                    <td th:text="${pret.dateRetourPrevue}">Date retour</td>
+                    <td>
+                        <form th:action="@{/prolongements/demander}" method="post" style="display:inline;">
+                            <input type="hidden" name="idPret" th:value="${pret.id}" />
+                            <button type="submit" class="btn btn-secondary btn-sm">Demander un prolongement</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

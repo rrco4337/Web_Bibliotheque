@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des demandes de réservation - Bibliothèque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#137C8B',
+                        secondary: '#709CA7',
+                        light: '#B8CBD0',
+                        accent: '#7A90A4',
+                        dark: '#344D59',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-light min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- En-tête -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-dark">Liste des demandes de réservations</h1>
+            <div class="flex items-center space-x-4">
+                <span class="bg-primary text-white px-3 py-1 rounded-full text-sm">
+                    <span th:text="${reservations.size()}"></span> demandes
+                </span>
+            </div>
+        </div>
+
+        <!-- Tableau des réservations -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Adhérent</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Exemplaire</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Date de demande</th>
+                            <th class="px-6 py-4 text-center text-sm font-medium uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr th:each="reservation : ${reservations}" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-dark">
+                                <span th:text="${reservation.adherent != null ? reservation.adherent.nom + ' ' + reservation.adherent.prenom : 'N/A'}"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-dark">
+                                <span th:text="${reservation.exemplaire != null ? reservation.exemplaire.livre.titre : 'N/A'}"></span>
+                                <p class="text-xs text-accent mt-1" th:if="${reservation.exemplaire != null}">
+                                    Réf: <span th:text="${reservation.exemplaire.id}"></span>
+                                </p>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-dark" th:text="${#temporals.format(reservation.dateReservation, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                <div class="flex justify-center space-x-2">
+                                    <a th:href="@{/reservations/confirmer/{id}(id=${reservation.id})}" 
+                                       class="btn-confirm px-3 py-1 rounded text-white text-sm hover:bg-green-700 transition-colors">
+                                        Confirmer
+                                    </a>
+                                    <a th:href="@{/reservations/refuser/{id}(id=${reservation.id})}" 
+                                       class="btn-reject px-3 py-1 rounded text-white text-sm hover:bg-red-700 transition-colors">
+                                        Refuser
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${reservations.empty}">
+                            <td colspan="4" class="px-6 py-4 text-center text-sm text-accent italic">
+                                Aucune réservation en attente
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+  
+        <!-- Pied de page -->
+        <div class="mt-6 text-center text-xs text-accent">
+              <a href="/"
+                                       class="btn-reject px-3 py-1 rounded text-white text-sm hover:bg-red-700 transition-colors">
+    retour </a> <br>
+            <p>Bibliothèque Universitaire - <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span></p>
+        </div>
+    </div>
+
+    <style type="text/css">
+        .btn-confirm {
+            background-color: #137C8B;
+        }
+        .btn-confirm:hover {
+            background-color: #0e6470;
+        }
+        .btn-reject {
+            background-color: #7A90A4;
+        }
+        .btn-reject:hover {
+            background-color: #647787;
+        }
+    </style>
+</body>
+</html>

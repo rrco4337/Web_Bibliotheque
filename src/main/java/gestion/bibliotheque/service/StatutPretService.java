@@ -22,10 +22,7 @@ public class StatutPretService {
         return statutPretRepository.findById(id);
     }
 
-    public Optional<StatutPret> getByNom(String nom) {
-        return statutPretRepository.findByNomStatut(nom);
-    }
-
+   
     public StatutPret create(StatutPret statutPret) {
         return statutPretRepository.save(statutPret);
     }

@@ -2,8 +2,9 @@ package gestion.bibliotheque.controller;
 
 import gestion.bibliotheque.model.TypeAdherent;
 import gestion.bibliotheque.model.Adherent;
-
+import gestion.bibliotheque.model.Pret;
 import gestion.bibliotheque.repository.AdherentRepository  ;
+import gestion.bibliotheque.repository.ExemplaireRepository;
 import gestion.bibliotheque.repository.PretRepository;
 import gestion.bibliotheque.repository.TypeAdherentRepository  ;
 import gestion.bibliotheque.service.TypeAdherentService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.WebDataBinder;
 
 import java.beans.PropertyEditorSupport;
+import java.util.List;
 
 @Controller
 @RequestMapping("/adherents")
@@ -26,9 +28,11 @@ public class AdherentController {
 
     @Autowired
     private TypeAdherentRepository typeAdherentRepository;
-    
+
     @Autowired
     private PretRepository pretRepository;
+    @Autowired      
+    private ExemplaireRepository exemplaireRepository;
 
     @GetMapping("/ajouter")
     public String afficherFormulaireAjout(Model model) {
@@ -66,8 +70,7 @@ public String connexionAdherent(@RequestParam("prenom") String prenom,
         return "connexionAdherent";
     }
     
-}
-@GetMapping("/accueil")
+}@GetMapping("/accueil")
 public String accueilAdherent(Model model, HttpSession session) {
     Long adherentId = (Long) session.getAttribute("adherentId");
     if (adherentId != null) {
@@ -88,12 +91,24 @@ public String accueilAdherent(Model model, HttpSession session) {
 
         // Statut pénalité (true/false)
         model.addAttribute("estPenalise", adherent.getEstPenalise());
-
+ List<Pret> pretsEnCours = pretRepository.findByAdherentAndDateRetourReelleIsNull(adherent);
+        model.addAttribute("pretsEnCours", pretsEnCours);
+        model.addAttribute("nbPrets", pretRepository.countByAdherentAndDateRetourReelleIsNull(adherent));
+        model.addAttribute("quotaMax", adherent.getTypeAdherent().getQuotaMaxPret());
+        model.addAttribute("quotaRestant", adherent.getTypeAdherent().getQuotaMaxPret() - pretRepository.countByAdherentAndDateRetourReelleIsNull(adherent));
+        model.addAttribute("estPenalise", adherent.getEstPenalise());
+        model.addAttribute("pretsRecents", pretRepository.findByAdherentOrderByDatePretDesc(adherent));
+        model.addAttribute("exemplairesDisponibles", exemplaireRepository.findByStatutPret_NomStatutIgnoreCase("disponible"));
+        // Liste des derniers prêts 
+        model.addAttribute("pretsRecents", pretRepository.findByAdherentOrderByDatePretDesc(adherent));
+        model.addAttribute("exemplairesDisponibles",
+            exemplaireRepository.findByStatutPret_NomStatutIgnoreCase("disponible"));
         return "accueil";
     } else {
         return "redirect:/adherents/connexion";
     }
 }
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
