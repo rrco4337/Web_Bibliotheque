@@ -30,9 +30,14 @@ CREATE TABLE Adherent (
     est_abonne BOOLEAN DEFAULT FALSE,
     est_penalise BOOLEAN DEFAULT FALSE
 );
+create table Abonne(
+    id SERIAL PRIMARY KEY,
+    id_adherent INT REFERENCES Adherent(id),
+    date_debut DATE,
+    date_fin DATE
+);
 
-
-
+insert into Abonne(id_adherent,date_debut,date_fin) values (23,'2025-01-04','2025-11-04');
 
 CREATE TABLE Livre (
     id SERIAL PRIMARY KEY,
