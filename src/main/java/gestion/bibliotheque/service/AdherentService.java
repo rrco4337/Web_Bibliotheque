@@ -41,13 +41,13 @@ public class AdherentService {
             Adherent adherent = optionalAdherent.get();
             TypeAdherent typeAdherent = adherent.getTypeAdherent();
 
-            // Vérification des restrictions
-            if (!adherent.getEstAbonne()) {
-                throw new AdherentRestrictionException("L'adhérent n'est pas abonné, prêt interdit.");
-            }
-            if (!adherent.getEstPenalise()) {
-                throw new AdherentRestrictionException("L'adhérent n'est pas abonné, prêt interdit.");
-            }
+            // // Vérification des restrictions
+            // if (!adherent.getEstAbonne()) {
+            //     throw new AdherentRestrictionException("L'adhérent n'est pas abonné, prêt interdit.");
+            // }
+            // if (!adherent.getEstPenalise()) {
+            //     throw new AdherentRestrictionException("L'adhérent n'est pas abonné, prêt interdit.");
+            // }
 
             // if (!typeAdherent.getEstPenalise()) {
             //     throw new AdherentRestrictionException("L'adhérent n'est pas abonné, prêt interdit.");

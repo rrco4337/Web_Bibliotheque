@@ -20,7 +20,7 @@ public class Adherent {
     private String prenom;
 
     @Column(name = "password", nullable = false, length = 200)
-    private String password; // ✅ CHAMP MANQUANT
+    private String password; 
 
     @Column(name = "date_naissance", nullable = false)
     private LocalDate dateNaissance;
