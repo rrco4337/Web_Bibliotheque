@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "Type_Adherent")
 public class TypeAdherent {
@@ -34,6 +36,7 @@ public class TypeAdherent {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "typeAdherent")
+    @JsonManagedReference
     private List<Adherent> adherents;
 
     // === Constructeurs ===

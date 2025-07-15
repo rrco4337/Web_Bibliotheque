@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
  
 import java.time.Period;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "Adherent")
 public class Adherent {
@@ -29,6 +31,7 @@ public class Adherent {
     private LocalDate dateInscription;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_type")
     private TypeAdherent typeAdherent;
 

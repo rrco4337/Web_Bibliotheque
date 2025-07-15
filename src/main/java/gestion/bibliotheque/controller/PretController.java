@@ -220,6 +220,9 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
         }
 
         penaliteRepository.save(nouvellePenalite);
+        Adherent adherentPenalise = pret.getAdherent();
+        adherentPenalise.setEstPenalise(true);
+        adherentRepository.save(adherentPenalise);
         System.out.println("Pénalité créée pour l'adhérent " + pret.getAdherent().getNom() + " jusqu'au " + nouvellePenalite.getDateFin());
     } else {
         System.out.println("ERREUR : Type de pénalité introuvable.");
