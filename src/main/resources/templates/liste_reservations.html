@@ -65,7 +65,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-dark" th:text="${#temporals.format(reservation.dateReservation, 'dd/MM/yyyy HH:mm')}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <div class="flex justify-center space-x-2">
-                                    <a th:href="@{/reservations/confirmer/{id}(id=${reservation.id})}" 
+                                    <a th:href="@{/reservations/accepter/{id}(id=${reservation.id})}" 
                                        class="btn-confirm px-3 py-1 rounded text-white text-sm hover:bg-green-700 transition-colors">
                                         Confirmer
                                     </a>

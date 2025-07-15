@@ -40,7 +40,7 @@ public class PretController {
     @Autowired
     private AdherentService adherentService;
 
-    // NOUVEAU : Injecter les repositories pour les pénalités
+
     @Autowired
     private PenaliteRepository penaliteRepository;
 
@@ -90,9 +90,21 @@ public class PretController {
             System.out.println("Adhérent non fourni dans le formulaire");
             return "redirect:/prets/liste";
         }
-        
-        // ================= DEBUT DE LA MODIFICATION (Vérification de pénalité) =================
-        // Vérifier si l'adhérent a une pénalité active
+        List<Pret> pretsEnCours = pretRepository.findByAdherentAndExemplaireAndDateRetourReelleIsNull(adherent, exemplaire);
+if (!pretsEnCours.isEmpty()) {
+    System.out.println("Prêt refusé : L'adhérent " + adherent.getNom() 
+        + " a déjà un prêt en cours pour cet exemplaire (ID: " + exemplaire.getId() + ")");
+    return "redirect:/prets/liste";
+}
+
+// Vérifier si l'exemplaire est déjà emprunté (peu importe par qui)
+List<Pret> pretsActifsPourExemplaire = pretRepository.findByExemplaireAndDateRetourReelleIsNull(exemplaire);
+if (!pretsActifsPourExemplaire.isEmpty()) {
+    System.out.println("Prêt refusé : L'exemplaire (ID: " + exemplaire.getId() 
+        + ") est déjà emprunté (prêt ID: " + pretsActifsPourExemplaire.get(0).getId() + ")");
+    return "redirect:/prets/liste";
+}
+      
         List<Penalite> penalites = penaliteRepository.findByAdherent(adherent);
         LocalDate datePret = pret.getDatePret();
         if (datePret == null) {
@@ -105,7 +117,7 @@ public class PretController {
                 return "redirect:/prets/liste";
             }
         }
-        // ================= FIN DE LA MODIFICATION ============================================
+
 
         Livre livre = exemplaire.getLivre();
         if (livre == null) {

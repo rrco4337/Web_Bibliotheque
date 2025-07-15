@@ -23,13 +23,14 @@ public class ProlongementController {
 
     @Autowired
     private StatutPretRepository statutPretRepository;
-@PostMapping("/demander")
-public String demanderProlongement(@RequestParam("idPret") Long idPret, HttpSession session, Model model) {
+    @PostMapping("/demander")
+    public String demanderProlongement(@RequestParam("idPret") Long idPret, HttpSession session, Model model) {
     Long adherentId = (Long) session.getAttribute("adherentId");
     Pret pret = pretRepository.findById(idPret).orElse(null);
 
     if (pret == null || !pret.getAdherent().getId().equals(adherentId)) {
         model.addAttribute("message", "Prêt introuvable ou non autorisé.");
+        System.err.println("Prêt introuvable ou non autorisé pour l'ID : " + idPret);
         return "erreur";
     }
 
@@ -38,8 +39,12 @@ public String demanderProlongement(@RequestParam("idPret") Long idPret, HttpSess
     ProlongementPret prolongement = new ProlongementPret();
     prolongement.setPret(pret);
     prolongement.setDateProlongement(LocalDate.now());
-    // Ajoute 15 jours à la date de retour prévue
-    prolongement.setDateRetourPrevue(pret.getDateRetourPrevue().plusDays(15));
+    
+    // Nouvelle logique pour calculer la date de retour prévue
+    TypeAdherent typeAdherent = pret.getAdherent().getTypeAdherent();
+    int dureeProlongement = typeAdherent.getDureeMaxPret();
+    prolongement.setDateRetourPrevue(pret.getDateRetourPrevue().plusDays(dureeProlongement));
+    
     // Récupère le statut par son id (1)
     StatutPret statut = statutPretRepository.findById(1L).orElse(null);
     prolongement.setStatut(statut);
@@ -67,35 +72,28 @@ public String refuserProlongement(@PathVariable("id") Long id) {
         }
     }
     return "redirect:/prolongements/liste-attente";
-}
-@GetMapping("/confirmer/{id}")
+}@GetMapping("/confirmer/{id}")
 public String confirmerProlongement(@PathVariable("id") Long id) {
     ProlongementPret prolongement = prolongementPretRepository.findById(id).orElse(null);
     if (prolongement != null) {
         Pret pretInitial = prolongement.getPret();
         Adherent adherent = pretInitial.getAdherent();
-        Exemplaire exemplaire = pretInitial.getExemplaire();
         TypeAdherent typeAdherent = adherent.getTypeAdherent();
+        int quotaMax = typeAdherent.getQuotaMaxProlongement();
+        int nbProlongements = prolongementPretRepository.countByPret_IdAndStatut_Id(pretInitial.getId(), 2L); // 2 = confirmé
 
-        // Calculer la nouvelle période de prêt
-        LocalDate dateDebutProlongement = pretInitial.getDateRetourPrevue();
+        if (nbProlongements >= quotaMax) {
+        
+            return "redirect:/prolongements/liste-attente?error=quota";
+        }
+
         int dureeProlongement = typeAdherent.getDureeMaxPret();
-        LocalDate dateFinProlongement = dateDebutProlongement.plusDays(dureeProlongement);
+        LocalDate nouvelleDateRetour = pretInitial.getDateRetourPrevue().plusDays(dureeProlongement);
 
-        // Créer le nouveau prêt
-        Pret nouveauPret = new Pret();
-        nouveauPret.setAdherent(adherent);
-        nouveauPret.setExemplaire(exemplaire);
-        nouveauPret.setDatePret(dateDebutProlongement);
-        nouveauPret.setDateRetourPrevue(dateFinProlongement);
-        nouveauPret.setTypePret(pretInitial.getTypePret());
-        // Statut "en_cours" (à adapter selon ton id)
-        StatutPret statutEnCours = statutPretRepository.findById(2L).orElse(null); // 2 = en_cours
-        nouveauPret.setStatut(statutEnCours);
+       
+        pretInitial.setDateRetourPrevue(nouvelleDateRetour);
+        pretRepository.save(pretInitial);
 
-        pretRepository.save(nouveauPret);
-
-        // Mettre à jour le statut du prolongement à "confirmé" (par exemple id=2)
         StatutPret statutConfirme = statutPretRepository.findById(2L).orElse(null); // 2 = confirmé
         prolongement.setStatut(statutConfirme);
         prolongementPretRepository.save(prolongement);

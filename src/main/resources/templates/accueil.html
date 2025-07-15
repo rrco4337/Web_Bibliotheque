@@ -108,7 +108,7 @@
                     </div>
 
                     <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Livres disponibles à la réservation</h2>
+    <h2 class="text-2xl font-bold mb-4">Livres réservables (déjà prêtés)</h2>
     <div class="overflow-x-auto">
         <table class="table w-full">
             <thead>
@@ -119,21 +119,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="exemplaire : ${exemplairesDisponibles}">
+                <tr th:each="exemplaire : ${exemplairesPretes}">
                     <td th:text="${exemplaire.livre.titre}">Titre</td>
                     <td th:text="${exemplaire.livre.auteur}">Auteur</td>
-                   <td>
-    <form th:action="@{/reservations/reserver}" method="post" style="display:inline;">
-        <input type="hidden" name="idExemplaire" th:value="${exemplaire.id}" />
-        <button type="submit" class="btn btn-primary btn-sm">Réserver</button>
-    </form>
-</td>
+                    <td>
+                        <form th:action="@{/reservations/reserver}" method="post" style="display:inline;">
+                            <input type="hidden" name="idExemplaire" th:value="${exemplaire.id}" />
+                            <button type="submit" class="btn btn-primary btn-sm">Réserver</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
-
 <div class="mb-8">
     <h2 class="text-2xl font-bold mb-4">Mes prêts en cours</h2>
     <div class="overflow-x-auto">

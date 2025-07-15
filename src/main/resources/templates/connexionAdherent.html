@@ -1,5 +1,117 @@
-<form action="/adherents/connexion" method="post">
-    <input type="text" name="prenom" required>
-    <input type="password" name="password" required>
-    <button type="submit">Connexion</button>
-</form>
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Bibliothèque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#137C8B',
+                        secondary: '#709CA7',
+                        light: '#B8CBD0',
+                        accent: '#7A90A4',
+                        dark: '#344D59',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8fafc;
+        }
+        .login-card {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #137C8B;
+            box-shadow: 0 0 0 3px rgba(19, 124, 139, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Carte de connexion -->
+        <div class="login-card bg-white rounded-xl p-8">
+            <!-- Logo/Titre -->
+            <div class="text-center mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+                <h1 class="text-2xl font-bold text-dark mt-4">Connexion Adhérent</h1>
+                <p class="text-sm text-accent mt-2">Accédez à votre espace personnel</p>
+            </div>
+
+            <!-- Formulaire -->
+            <form action="/adherents/connexion" method="post" class="space-y-6">
+                <!-- Messages d'erreur -->
+                <div th:if="${param.error}" class="bg-red-50 border-l-4 border-red-500 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">Identifiant ou mot de passe incorrect</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Champ Prénom -->
+                <div>
+                    <label for="prenom" class="block text-sm font-medium text-dark mb-1">Prénom</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="text" id="prenom" name="prenom" required
+                               class="input-field block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary placeholder-gray-400"
+                               placeholder="Votre prénom">
+                    </div>
+                </div>
+
+                <!-- Champ Mot de passe -->
+                <div>
+                    <div class="flex justify-between items-center">
+                        <label for="password" class="block text-sm font-medium text-dark mb-1">Mot de passe</label>
+                        <a href="#" class="text-xs text-primary hover:underline">Mot de passe oublié ?</a>
+                    </div>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="password" id="password" name="password" required
+                               class="input-field block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary placeholder-gray-400"
+                               placeholder="Votre mot de passe">
+                    </div>
+                </div>
+
+                <!-- Bouton de connexion -->
+                <div>
+                    <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-300">
+                        Se connecter
+                    </button>
+                </div>
+            </form>
+
+            <!-- Lien d'inscription -->
+            <div class="mt-6 text-center">
+                <p class="text-sm text-accent">
+                    Pas encore inscrit ?
+                    <a href="/adherents/inscription" class="font-medium text-primary hover:underline">Créer un compte</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-8 text-center text-xs text-gray-500">
+            <p>Bibliothèque Universitaire © <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+        </div>
+    </div>
+</body>
+</html>

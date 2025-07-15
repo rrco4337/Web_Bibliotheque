@@ -2,6 +2,7 @@ package gestion.bibliotheque.controller;
 
 import gestion.bibliotheque.model.TypeAdherent;
 import gestion.bibliotheque.model.Adherent;
+import gestion.bibliotheque.model.Exemplaire;
 import gestion.bibliotheque.model.Pret;
 import gestion.bibliotheque.repository.AdherentRepository  ;
 import gestion.bibliotheque.repository.ExemplaireRepository;
@@ -85,13 +86,14 @@ public String accueilAdherent(Model model, HttpSession session) {
         int quotaMax = adherent.getTypeAdherent().getQuotaMaxPret();
         model.addAttribute("quotaMax", quotaMax);
 
-        // Quota restant
+      
         int quotaRestant = quotaMax - nbPrets;
         model.addAttribute("quotaRestant", quotaRestant);
 
-        // Statut pénalité (true/false)
+       
         model.addAttribute("estPenalise", adherent.getEstPenalise());
- List<Pret> pretsEnCours = pretRepository.findByAdherentAndDateRetourReelleIsNull(adherent);
+        model.addAttribute("exemplairesPretes", exemplaireRepository.findByStatutPret_NomStatutIgnoreCase("en_cours"));
+        List<Pret> pretsEnCours = pretRepository.findByAdherentAndDateRetourReelleIsNull(adherent);
         model.addAttribute("pretsEnCours", pretsEnCours);
         model.addAttribute("nbPrets", pretRepository.countByAdherentAndDateRetourReelleIsNull(adherent));
         model.addAttribute("quotaMax", adherent.getTypeAdherent().getQuotaMaxPret());
@@ -99,10 +101,12 @@ public String accueilAdherent(Model model, HttpSession session) {
         model.addAttribute("estPenalise", adherent.getEstPenalise());
         model.addAttribute("pretsRecents", pretRepository.findByAdherentOrderByDatePretDesc(adherent));
         model.addAttribute("exemplairesDisponibles", exemplaireRepository.findByStatutPret_NomStatutIgnoreCase("disponible"));
-        // Liste des derniers prêts 
+     
         model.addAttribute("pretsRecents", pretRepository.findByAdherentOrderByDatePretDesc(adherent));
-        model.addAttribute("exemplairesDisponibles",
-            exemplaireRepository.findByStatutPret_NomStatutIgnoreCase("disponible"));
+        List<Exemplaire> exemplairesIndisponibles = exemplaireRepository.findByStatutPret_Id(2L);
+    
+ 
+    model.addAttribute("exemplairesPretes", exemplairesIndisponibles); 
         return "accueil";
     } else {
         return "redirect:/adherents/connexion";

@@ -1,1 +1,107 @@
-gvhbjnk
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de demande</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#137C8B',
+                        secondary: '#709CA7',
+                        light: '#B8CBD0',
+                        accent: '#7A90A4',
+                        dark: '#344D59',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .wave-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23137C8B' fill-opacity='0.1' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="min-h-screen flex items-center justify-center p-4 wave-bg">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+            <!-- Header -->
+            <div class="bg-primary py-8 px-6 text-center">
+                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white">Demande enregistrée</h1>
+                <p class="text-white text-opacity-90 mt-2">Bibliothèque Universitaire</p>
+            </div>
+            
+            <!-- Content -->
+            <div class="p-8 md:p-10 text-center">
+                <div class="mb-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                
+                <h2 class="text-2xl font-semibold text-dark mb-4">Votre demande est en cours de traitement</h2>
+                
+                <p class="text-accent text-lg mb-6 leading-relaxed">
+                    Nous avons bien reçu votre demande de réservation.<br>
+                    Elle est maintenant en attente de confirmation par notre équipe.
+                </p>
+                
+                <div class="bg-light bg-opacity-50 rounded-lg p-5 border border-secondary border-opacity-30 mb-8 max-w-md mx-auto">
+                    <div class="flex items-center justify-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="font-medium text-dark">Temps de traitement : 24-48 heures</span>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <p class="text-sm text-accent">
+                        Vous recevrez une notification par email dès que votre réservation sera confirmée.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="/adherents/accueil" class="px-6 py-3 bg-primary hover:bg-dark text-white font-medium rounded-lg transition-colors duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                        Retour à l'accueil
+                    </a>
+                    <a href="#" class="px-6 py-3 border border-primary text-primary hover:bg-primary hover:text-white font-medium rounded-lg transition-colors duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
+                        Voir mes demandes
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="bg-dark bg-opacity-90 px-6 py-4">
+                <p class="text-xs text-center text-light">
+                    Pour toute question, contactez-nous à <a href="mailto:bibliotheque@universite.edu" class="text-secondary font-medium hover:underline">bibliotheque@universite.edu</a>
+                    <br>ou par téléphone au <span class="text-secondary font-medium">01 23 45 67 89</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

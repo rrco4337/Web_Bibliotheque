@@ -40,12 +40,87 @@
 </head>
 <body class="min-h-screen bg-gray-50">
     <!-- Header élégant avec dégradé -->
-    <header class="gradient-header text-white">
-        <div class="container mx-auto py-12 px-6 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Bibliothèque Municipale</h1>
-            <p class="text-xl opacity-90">Gestion complète des ressources documentaires</p>
+    <!-- Navigation Bar -->
+<nav class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <!-- Logo et titre -->
+            <div class="flex-shrink-0 flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Bibliothèque</h1>
+                    <p class="text-xs text-gray-500 hidden sm:block">Gestion du fonds documentaire</p>
+                </div>
+            </div>
+
+            <!-- Menu principal -->
+            <div class="hidden md:ml-6 md:flex md:space-x-8">
+                <a href="" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                    Catalogue
+                </a>
+                <a href="adherents/listeAdherent" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                    Membres
+                </a>
+                <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                    Prêts
+                </a>
+                <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                    Statistiques
+                </a>
+            </div>
+
+            <!-- Bouton ajouter + profil -->
+            <div class="flex items-center space-x-4">
+                <a th:href="@{/livres/ajouter}" class="btn btn-primary hover-transition hover:shadow-md hidden sm:inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Ajouter un livre
+                </a>
+
+                <!-- Menu profil -->
+                <div class="ml-3 relative">
+                    <div class="flex items-center space-x-2 cursor-pointer">
+                        <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
+                            <span>AD</span>
+                        </div>
+                        <span class="hidden lg:inline text-sm font-medium text-gray-700">Admin</span>
+                    </div>
+                </div>
+
+                <!-- Bouton mobile -->
+                <button type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
         </div>
-    </header>
+    </div>
+
+    <!-- Menu mobile -->
+    <div class="md:hidden hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+            <a href="" class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Catalogue</a>
+            <a href="@{adherents/listeAdherent}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Membres</a>
+            <a href="#" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Prêts</a>
+            <a href="#" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Statistiques</a>
+            <a th:href="@{/livres/ajouter}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                Ajouter un livre
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Gestion du menu mobile
+    document.querySelector('button[type="button"]').addEventListener('click', function() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    });
+</script>
 
     <main class="container mx-auto py-12 px-6 -mt-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -125,8 +200,8 @@
                     <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mb-4">
                         <i class="fas fa-exclamation-triangle text-2xl text-error"></i>
                     </div>
-                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Pénalités</h2>
-                    <p class="text-gray-600 mb-6">Suivi des retards et amendes</p>
+                    <h2 class="card-title text-xl font-semibold mb-2">Gestion des Prolongements</h2>
+                    <p class="text-gray-600 mb-6">Liste des demandes de prolongements</p>
                     <a th:href="@{/prolongements/liste-attente}" class="btn btn-error btn-sm px-8">
                         Accéder <i class="fas fa-arrow-right ml-2"></i>
                     </a>
