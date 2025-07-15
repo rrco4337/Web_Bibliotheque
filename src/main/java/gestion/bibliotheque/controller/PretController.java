@@ -195,30 +195,36 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
         pret.setDateRetourReelle(dateRetourReelle);
 
         
-        if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
-            long joursDeRetard = ChronoUnit.DAYS.between(pret.getDateRetourPrevue(), dateRetourReelle);
-            
-            System.out.println("Livre rendu avec " + joursDeRetard + " jour(s) de retard.");
+       if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
+    long joursDeRetard = ChronoUnit.DAYS.between(pret.getDateRetourPrevue(), dateRetourReelle);
 
-            TypePenalite typeSuspension = typePenaliteRepository.findById(1L).orElse(null); // On suppose que l'ID 1 est la suspension
-            if (typeSuspension != null) {
-                Penalite nouvellePenalite = new Penalite();
-                nouvellePenalite.setAdherent(pret.getAdherent());
-                nouvellePenalite.setTypePenalite(typeSuspension);
-                nouvellePenalite.setDateDebut(dateRetourReelle); 
-                nouvellePenalite.setDateDebut(dateRetourReelle); 
-                if (typeSuspension.getDureePenalite() != null) {
-                    nouvellePenalite.setDateFin(dateRetourReelle.plusDays(typeSuspension.getDureePenalite()));
-                } else {
-                    System.out.println("tsy hita bro"); // ou gérez le cas d'absence de durée
-                }
+    System.out.println("Livre rendu avec " + joursDeRetard + " jour(s) de retard.");
 
-                penaliteRepository.save(nouvellePenalite);
-                System.out.println("Pénalité de suspension créée pour l'adhérent " + pret.getAdherent().getNom() + " jusqu'au " + nouvellePenalite.getDateFin());
-            } else {
-                 System.out.println("ERREUR : Le type de pénalité 'Suspension' (ID 1) est introuvable.");
-            }
+    Long typePenaliteId;
+    if (joursDeRetard <= 7) {
+        typePenaliteId = 1L; // Retard mineur
+    } else {
+        typePenaliteId = 2L; // Retard majeur
+    }
+
+    TypePenalite typeSuspension = typePenaliteRepository.findById(typePenaliteId).orElse(null);
+    if (typeSuspension != null) {
+        Penalite nouvellePenalite = new Penalite();
+        nouvellePenalite.setAdherent(pret.getAdherent());
+        nouvellePenalite.setTypePenalite(typeSuspension);
+        nouvellePenalite.setDateDebut(dateRetourReelle);
+        if (typeSuspension.getDureePenalite() != null) {
+            nouvellePenalite.setDateFin(dateRetourReelle.plusDays(typeSuspension.getDureePenalite()));
+        } else {
+            System.out.println("Durée de pénalité non définie.");
         }
+
+        penaliteRepository.save(nouvellePenalite);
+        System.out.println("Pénalité créée pour l'adhérent " + pret.getAdherent().getNom() + " jusqu'au " + nouvellePenalite.getDateFin());
+    } else {
+        System.out.println("ERREUR : Type de pénalité introuvable.");
+    }
+}
       
         
         pretRepository.save(pret);
