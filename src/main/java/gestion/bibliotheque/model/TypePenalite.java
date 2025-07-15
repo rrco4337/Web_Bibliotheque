@@ -17,6 +17,16 @@ public class TypePenalite {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+@Column(name = "durre_penalite")
+private Integer dureePenalite; // durée en jours
+
+public Integer getDureePenalite() {
+    return dureePenalite;
+}
+
+public void setDureePenalite(Integer dureePenalite) {
+    this.dureePenalite = dureePenalite;
+}
     // Getters et Setters
     public Long getId() {
         return id;

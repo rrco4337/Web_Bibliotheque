@@ -47,6 +47,8 @@ public class PretController {
     @Autowired
     private TypePenaliteRepository typePenaliteRepository;
 
+    @Autowired
+    private AbonneRepository abonneRepository;
 
     @GetMapping("/ajouter")
     public String afficherFormulaireAjoutPret(Model model) {
@@ -88,6 +90,13 @@ public class PretController {
 
         if (adherent == null) {
             System.out.println("Adhérent non fourni dans le formulaire");
+            return "redirect:/prets/liste";
+        }
+        // Vérification de l'abonnement de l'adhérent
+        Abonne abonne = abonneRepository.findByAdherent(adherent);
+        LocalDate date = pret.getDatePret();
+        if (abonne == null || abonne.getDateFin() == null || date == null || date.isAfter(abonne.getDateFin())) {
+            System.out.println("Prêt refusé : L'adhérent " + adherent.getNom() + " n'est pas abonné ou l'abonnement est expiré.");
             return "redirect:/prets/liste";
         }
         List<Pret> pretsEnCours = pretRepository.findByAdherentAndExemplaireAndDateRetourReelleIsNull(adherent, exemplaire);
@@ -185,22 +194,24 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
 
         pret.setDateRetourReelle(dateRetourReelle);
 
-        // ================= DEBUT DE LA MODIFICATION (Création de pénalité) =================
-        // Vérifier si le retour est en retard
+        
         if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
-            // Calculer le nombre de jours de retard
             long joursDeRetard = ChronoUnit.DAYS.between(pret.getDateRetourPrevue(), dateRetourReelle);
             
             System.out.println("Livre rendu avec " + joursDeRetard + " jour(s) de retard.");
 
-            // Créer une nouvelle pénalité
             TypePenalite typeSuspension = typePenaliteRepository.findById(1L).orElse(null); // On suppose que l'ID 1 est la suspension
             if (typeSuspension != null) {
                 Penalite nouvellePenalite = new Penalite();
                 nouvellePenalite.setAdherent(pret.getAdherent());
                 nouvellePenalite.setTypePenalite(typeSuspension);
-                nouvellePenalite.setDateDebut(dateRetourReelle); // La pénalité commence le jour du retour
-                nouvellePenalite.setDateFin(dateRetourReelle.plusDays(joursDeRetard)); // La pénalité dure autant de jours que le retard
+                nouvellePenalite.setDateDebut(dateRetourReelle); 
+                nouvellePenalite.setDateDebut(dateRetourReelle); 
+                if (typeSuspension.getDureePenalite() != null) {
+                    nouvellePenalite.setDateFin(dateRetourReelle.plusDays(typeSuspension.getDureePenalite()));
+                } else {
+                    System.out.println("tsy hita bro"); // ou gérez le cas d'absence de durée
+                }
 
                 penaliteRepository.save(nouvellePenalite);
                 System.out.println("Pénalité de suspension créée pour l'adhérent " + pret.getAdherent().getNom() + " jusqu'au " + nouvellePenalite.getDateFin());
@@ -208,7 +219,7 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
                  System.out.println("ERREUR : Le type de pénalité 'Suspension' (ID 1) est introuvable.");
             }
         }
-        // ================= FIN DE LA MODIFICATION ============================================
+      
         
         pretRepository.save(pret);
 
