@@ -10,4 +10,7 @@ public interface ProlongementPretRepository extends CrudRepository<ProlongementP
     // Tu peux ajouter des méthodes personnalisées ici si besoin
     List<ProlongementPret> findByStatut_Id(Long statutId);
     int countByPret_IdAndStatut_Id(Long pretId, Long statutId);
+    // ...existing code...
+long countByPret_Adherent_IdAndStatut_Id(Long adherentId, Long statutId);
+// ...existing code...
 }

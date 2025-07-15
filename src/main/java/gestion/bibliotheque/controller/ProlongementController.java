@@ -40,12 +40,19 @@ public class ProlongementController {
     prolongement.setPret(pret);
     prolongement.setDateProlongement(LocalDate.now());
     
-    // Nouvelle logique pour calculer la date de retour prévue
+    //calculer la date de retour prévue s
     TypeAdherent typeAdherent = pret.getAdherent().getTypeAdherent();
     int dureeProlongement = typeAdherent.getDureeMaxPret();
     prolongement.setDateRetourPrevue(pret.getDateRetourPrevue().plusDays(dureeProlongement));
-    
-    // Récupère le statut par son id (1)
+    // TypeAdherent typeAdherent = pret.getAdherent().getTypeAdherent();
+    int quotaMax = typeAdherent.getQuotaMaxProlongement();
+    long nbProlongements = prolongementPretRepository.countByPret_Adherent_IdAndStatut_Id(adherentId, 2L); // 2 = confirmé
+
+if (nbProlongements >= quotaMax) {
+    model.addAttribute("message", "Quota de prolongements atteint.");
+    return "erreur";
+}
+  
     StatutPret statut = statutPretRepository.findById(1L).orElse(null);
     prolongement.setStatut(statut);
 

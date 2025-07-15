@@ -104,7 +104,6 @@ public String ajouterLivre(@ModelAttribute Livre livre,
         model.addAttribute("livres", livreRepository.findAll());
         return "listeLivres";
     }
-
      
     @GetMapping("/livre/{id}")
     public String listeExemplairesParLivre(@PathVariable Long id, Model model) {
@@ -112,4 +111,10 @@ public String ajouterLivre(@ModelAttribute Livre livre,
             model.addAttribute("exemplaires", exemplaires);
             return "liste_exemplaires";
     }
+    @GetMapping("/api/livre/{id}")
+    @ResponseBody
+    public List<Exemplaire> listeExemplairesParLivreApi(@PathVariable Long id) {
+        return exemplaireRepository.findByLivreIdWithStatut(id);
+    }
+
 }

@@ -1,9 +1,11 @@
 package gestion.bibliotheque.controller;
 
 import gestion.bibliotheque.model.TypeAdherent;
+import gestion.bibliotheque.model.Abonne;
 import gestion.bibliotheque.model.Adherent;
 import gestion.bibliotheque.model.Exemplaire;
 import gestion.bibliotheque.model.Pret;
+import gestion.bibliotheque.repository.AbonneRepository;
 import gestion.bibliotheque.repository.AdherentRepository  ;
 import gestion.bibliotheque.repository.ExemplaireRepository;
 import gestion.bibliotheque.repository.PretRepository;
@@ -34,6 +36,8 @@ public class AdherentController {
     private PretRepository pretRepository;
     @Autowired      
     private ExemplaireRepository exemplaireRepository;
+    @Autowired
+    private AbonneRepository abonneRepository;
 
     @GetMapping("/ajouter")
     public String afficherFormulaireAjout(Model model) {
@@ -71,7 +75,8 @@ public String connexionAdherent(@RequestParam("prenom") String prenom,
         return "connexionAdherent";
     }
     
-}@GetMapping("/accueil")
+}
+@GetMapping("/accueil")
 public String accueilAdherent(Model model, HttpSession session) {
     Long adherentId = (Long) session.getAttribute("adherentId");
     if (adherentId != null) {
@@ -111,6 +116,20 @@ public String accueilAdherent(Model model, HttpSession session) {
     } else {
         return "redirect:/adherents/connexion";
     }
+}
+@GetMapping("/api/{idAdherent}")
+@ResponseBody
+public Object adherentInfoApi(@PathVariable Long idAdherent) {
+    Adherent adherent = adherentRepository.findById(idAdherent).orElse(null);
+    if (adherent == null) return null;
+
+    Abonne abonne = abonneRepository.findByAdherent(adherent);
+
+    return new Object() {
+        public final int quotaPret = adherent.getTypeAdherent().getQuotaMaxPret();
+        public final Abonne abonnement = abonne;
+        public final boolean estPenalise = adherent.getEstPenalise();
+    };
 }
 
 
