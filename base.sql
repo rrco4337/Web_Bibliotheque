@@ -130,7 +130,8 @@ CREATE TABLE Type_Penalite (
     id_type_penalite SERIAL PRIMARY KEY,
     nom_type_penalite VARCHAR(100),
     durre_penalite int  , -- en jour 
-    description TEXT
+    description TEXT,
+    id_type_adherent INT REFERENCES Type_Adherent(id)
 );
 
 -- Table des pénalités infligées aux adhérents
@@ -185,36 +186,46 @@ INSERT INTO Admin (nom_utilisateur, mot_de_passe) VALUES
 
 -- Insertion des types d'adhérents
 INSERT INTO Type_Adherent (nom_type, quota_max_pret, duree_max_pret, quota_max_prolongement, duree_max_prolongement) VALUES 
-('Enfant', 3, 14, 1, 7),
-('Adulte', 5, 21, 2, 14),
-('Etudiant', 7, 28, 2, 14),
-('Senior', 6, 28, 2, 14);
+('Etudiant',2,7,3,1),
+('Enseignant',3,9,5,2),
+('Professionnel',4,12,7,3);
+
 
 -- Insertion des adhérents
 INSERT INTO Adherent (nom, prenom, password, date_naissance, date_inscription, id_type, est_abonne, est_penalise) VALUES 
-('Dupont', 'Jean', 'pass123', '1990-05-15', '2023-01-10', 2, TRUE, FALSE),
+('Amine Bensaïd', 'Jean', 'pass123', '1990-05-15', '2023-01-10', 2, TRUE, FALSE),
 ('Martin', 'Sophie', 'pass456', '1985-08-22', '2023-02-15', 2, TRUE, FALSE),
-('Bernard', 'Luc', 'pass789', '1978-11-30', '2023-03-20', 3, TRUE, FALSE),
+('Bernard', 'Luc', 'pass789', '1978-11-30', '2023-03-20', 3, TRUE, FALSE),;
 ('Petit', 'Emma', 'pass101', '2012-04-05', '2023-04-25', 1, TRUE, FALSE),
 ('Moreau', 'Pierre', 'pass202', '1960-07-18', '2023-05-30', 4, TRUE, FALSE),
 ('Lefebvre', 'Camille', 'pass303', '1995-09-12', '2023-06-05', 3, TRUE, FALSE),
 ('Roux', 'Thomas', 'pass404', '2010-12-24', '2023-07-10', 1, FALSE, TRUE),
 ('Fournier', 'Laura', 'pass505', '1982-03-08', '2023-08-15', 2, TRUE, FALSE),
 ('Girard', 'Nicolas', 'pass606', '1975-06-19', '2023-09-20', 4, TRUE, FALSE),
-('Mercier', 'Alice', 'pass707', '2008-10-31', '2023-10-25', 1, FALSE, FALSE);
+('Mercier', 'Alice', 'pass707', '2008-10-31', '2023-10-25', 1, FALSE, FALSE)
+
+-- Inserting student adherents
+INSERT INTO Adherent (nom, prenom, password, date_naissance, date_inscription, id_type, est_abonne, est_penalise) VALUES 
+('Bensaïd', 'Amine', '1', '1995-05-15', '2023-01-10', 1, TRUE, FALSE),
+('El Khattabi', 'Sarah', '2', '1996-08-22', '2023-01-11', 1, TRUE, FALSE),
+('Moujahid', 'Youssef', 'password3', '1997-03-30', '2023-01-12', 1, TRUE, FALSE);
+
+-- Inserting teacher adherents
+INSERT INTO Adherent (nom, prenom, password, date_naissance, date_inscription, id_type, est_abonne, est_penalise) VALUES 
+('Benali', 'Nadia', '4', '1980-11-05', '2023-01-13', 2, TRUE, FALSE),
+('Haddadi', 'Karim', '5', '1975-07-18', '2023-01-14', 2,TRUE, FALSE),
+('Touhami', 'Salima', '6', '1978-09-25', '2023-01-15', 2,TRUE, FALSE);
+
+-- Inserting professional adherents
+INSERT INTO Adherent (nom, prenom, password, date_naissance, date_inscription, id_type, est_abonne, est_penalise) VALUES 
+('El Mansouri', 'Rachid', '7', '1985-04-12', '2023-01-16', 3, TRUE,FALSE ),
+('Zerouali', 'Amina', '8', '1988-12-08', '2023-01-17', 3, TRUE, FALSE);
 
 -- Insertion des livres
 INSERT INTO Livre (titre, auteur, isbn, date_publication, age_restriction, nbr_exmp, description, image_url) VALUES 
-('Le Petit Prince', 'Antoine de Saint-Exupéry', '9782070408504', '1943-04-06', 6, 5, 'Un conte poétique et philosophique', 'petit_prince.jpg'),
-('1984', 'George Orwell', '9782070368228', '1949-06-08', 16, 3, 'Roman dystopique', '1984.jpg'),
-('Harry Potter à lécole des sorciers', 'J.K. Rowling', '9782070518425', '1997-06-26', 10, 4, 'Premier tome de la saga Harry Potter', 'harry_potter.jpg'),
-('Le Seigneur des Anneaux', 'J.R.R. Tolkien', '9782266282360', '1954-07-29', 12, 2, 'Trilogie fantastique', 'seigneur_anneaux.jpg'),
-('Gatsby le Magnifique', 'F. Scott Fitzgerald', '9782070376926', '1925-04-10', 14, 3, 'Roman sur Amérique des années 20', 'gatsby.jpg'),
-('Orgueil et Préjugés', 'Jane Austen', '9782253006329', '1813-01-28', 12, 2, 'Roman classique anglais', 'orgueil_prejuges.jpg'),
-('Le Comte de Monte-Cristo', 'Alexandre Dumas', '9782253088530', '1844-08-28', 14, 1, 'Roman aventure et de vengeance', 'monte_cristo.jpg'),
-('Crime et Châtiment', 'Fiodor Dostoïevski', '9782070413140', '1866-01-01', 16, 2, 'Roman psychologique', 'crime_chatiment.jpg'),
-('Étranger', 'Albert Camus', '9782070360024', '1942-05-19', 14, 3, 'Roman existentialiste', 'etranger.jpg'),
-('Voyage au bout de la nuit', 'Louis-Ferdinand Céline', '9782070360284', '1932-10-15', 18, 1, 'Roman sombre et pessimiste', 'voyage_nuit.jpg');
+('Les miserables', 'Victor Hugo', '9782070409189', '1943-04-06', 6, 3, 'Un conte poétique et philosophique', 'petit_prince.jpg'),
+('Étranger', 'Albert Camus', '9782070360022', '1942-05-19', 14, 2, 'Roman existentialiste', 'etranger.jpg'),
+('Harry Potter à lécole des sorciers', 'J.K. Rowling', '9782070518425', '1997-06-26', 10,1, 'Premier tome de la saga Harry Potter', 'harry_potter.jpg');
 
 -- Insertion des types d'utilisation
 INSERT INTO Type_Utilisation (nom_type_utilisation) VALUES 
@@ -224,59 +235,38 @@ INSERT INTO Type_Utilisation (nom_type_utilisation) VALUES
 ('Prêt spécial');
 
 -- Insertion des droits de prêt
-INSERT INTO Droit_Pret (id_type_adherent, id_type_utilisation, id_livre, autorise) VALUES 
-(1, 1, 1, TRUE),
-(1, 2, 1, TRUE),
-(2, 1, 1, TRUE),
-(2, 2, 1, TRUE),
-(3, 1, 1, TRUE),
-(3, 2, 1, TRUE),
-(4, 1, 1, TRUE),
-(4, 2, 1, TRUE),
-(1, 1, 2, TRUE),
-(1, 2, 2, FALSE),
-(2, 1, 2, TRUE),
-(2, 2, 2, TRUE),
-(3, 1, 2, TRUE),
-(3, 2, 2, TRUE),
-(4, 1, 2, TRUE),
-(4, 2, 2, TRUE);
+-- INSERT INTO Droit_Pret (id_type_adherent, id_type_utilisation, id_livre, autorise) VALUES 
+-- (1, 1, 1, TRUE),
+-- (1, 2, 1, TRUE),
+-- (2, 1, 1, TRUE),
+-- (2, 2, 1, TRUE),
+-- (3, 1, 1, TRUE),
+-- (3, 2, 1, TRUE),
+-- (4, 1, 1, TRUE),
+-- (4, 2, 1, TRUE),
+-- (1, 1, 2, TRUE),
+-- (1, 2, 2, FALSE),
+-- (2, 1, 2, TRUE),
+-- (2, 2, 2, TRUE),
+-- (3, 1, 2, TRUE),
+-- (3, 2, 2, TRUE),
+-- (4, 1, 2, TRUE),
+-- (4, 2, 2, TRUE);
 
 -- Insertion des exemplaires
 INSERT INTO Exemplaire (id_livre, code_exemplaire, id_status) VALUES 
-(1, 'EXP-001-001', 1),
-(1, 'EXP-001-002', 1),
-(1, 'EXP-001-003', 1),
-(1, 'EXP-001-004', 1),
-(1, 'EXP-001-005', 1),
-(2, 'EXP-002-001', 1),
-(2, 'EXP-002-002', 1),
-(2, 'EXP-002-003', 1),
-(3, 'EXP-003-001', 1),
-(3, 'EXP-003-002', 1),
-(3, 'EXP-003-003', 1),
-(3, 'EXP-003-004', 1),
-(4, 'EXP-004-001', 1),
-(4, 'EXP-004-002', 1),
-(5, 'EXP-005-001', 1),
-(5, 'EXP-005-002', 1),
-(5, 'EXP-005-003', 1),
-(6, 'EXP-006-001', 1),
-(6, 'EXP-006-002', 1),
-(7, 'EXP-007-001', 1),
-(8, 'EXP-008-001', 1),
-(8, 'EXP-008-002', 1),
-(9, 'EXP-009-001', 1),
-(9, 'EXP-009-002', 1),
-(9, 'EXP-009-003', 1),
-(10, 'EXP-010-001', 1);
+(1, 'MIS001', 1),
+(1, 'MIS002', 1),
+(1, 'MIS003', 1),
+(2, 'ETR001', 1),
+(2, 'ETR002', 1),
+(3, 'HAR001', 1);
 
 -- Insertion des types de pénalités
-INSERT INTO Type_Penalite (nom_type_penalite, durre_penalite, description) VALUES 
-('Retard mineur', 7, 'Retard de moins de 7 jours'),
-('Retard majeur', 14, 'Retard de plus de 7 jours'),
-('Livre endommagé', 30, 'Livre rendu en mauvais état'),
-('Livre perdu', 60, 'Livre non rendu après plusieurs rappels');
+INSERT INTO Type_Penalite (nom_type_penalite, durre_penalite, description,id_type_adherent) VALUES 
+('Retard mineur',10, 'Retard de moins de 7 jours',1),
+('Retard majeur', 9, 'Retard de plus de 7 jours',2),
+('Livre endommagé',8, 'Livre rendu en mauvais état',3);
 
 -- Insertion des pénalités
 INSERT INTO Penalite (id_adherent, raison, id_type_penalite, date_debut, date_fin) VALUES 
@@ -361,3 +351,51 @@ INSERT INTO Historique_Statut_Paiement (id_paiement, id_statut, id_admin, montan
 (10, 1, 1, 15.00, '2023-10-25 19:00:00', 'Paiement en attente de validation'),
 (11, 2, 2, 5.00, '2023-09-01 20:00:00', 'Amende payée'),
 (12, 2, 3, 5.00, '2023-10-05 21:00:00', 'Amende payée');
+
+BEGIN;
+
+TRUNCATE TABLE Historique_Statut_Paiement RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Paiement_Adherent RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Statut_Paiement RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Type_Payement RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Historique_Statut_Pret RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Prolongement_Pret RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Pret RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Reservation RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Statut_Reservation RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Exemplaire RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Livre RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Droit_Pret RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Type_Utilisation RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Penalite RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Type_Penalite RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Abonne RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Adherent RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Type_Adherent RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Admin RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Statut_Pret RESTART IDENTITY CASCADE;
+TRUNCATE TABLE Type_Pret RESTART IDENTITY CASCADE;
+
+ALTER SEQUENCE admin_id_admin_seq RESTART WITH 1;
+ALTER SEQUENCE type_adherent_id_seq RESTART WITH 1;
+ALTER SEQUENCE adherent_id_seq RESTART WITH 1;
+ALTER SEQUENCE abonne_id_seq RESTART WITH 1;
+ALTER SEQUENCE livre_id_seq RESTART WITH 1;
+ALTER SEQUENCE type_utilisation_id_seq RESTART WITH 1;
+ALTER SEQUENCE droit_pret_id_seq RESTART WITH 1;
+ALTER SEQUENCE statut_pret_id_statut_pret_seq RESTART WITH 1;
+ALTER SEQUENCE exemplaire_id_exemplaire_seq RESTART WITH 1;
+ALTER SEQUENCE type_pret_id_type_pret_seq RESTART WITH 1;
+ALTER SEQUENCE pret_id_seq RESTART WITH 1;
+ALTER SEQUENCE prolongement_pret_id_seq RESTART WITH 1;
+ALTER SEQUENCE historique_statut_pret_id_historique_seq RESTART WITH 1;
+ALTER SEQUENCE type_penalite_id_type_penalite_seq RESTART WITH 1;
+ALTER SEQUENCE penalite_id_seq RESTART WITH 1;
+ALTER SEQUENCE type_payement_id_seq RESTART WITH 1;
+ALTER SEQUENCE statut_paiement_id_seq RESTART WITH 1;
+ALTER SEQUENCE paiement_adherent_id_seq RESTART WITH 1;
+ALTER SEQUENCE historique_statut_paiement_id_seq RESTART WITH 1;
+ALTER SEQUENCE statut_reservation_id_seq RESTART WITH 1;
+ALTER SEQUENCE reservation_id_seq RESTART WITH 1;
+
+COMMIT;

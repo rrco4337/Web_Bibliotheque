@@ -14,19 +14,16 @@ public class TypePenalite {
     @Column(name = "nom_type_penalite", length = 100)
     private String nomTypePenalite;
 
+    @Column(name = "durre_penalite")
+    private Integer dureePenalite; // durée en jours
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
-@Column(name = "durre_penalite")
-private Integer dureePenalite; // durée en jours
+    @ManyToOne
+    @JoinColumn(name = "id_type_adherent")
+    private TypeAdherent typeAdherent;
 
-public Integer getDureePenalite() {
-    return dureePenalite;
-}
-
-public void setDureePenalite(Integer dureePenalite) {
-    this.dureePenalite = dureePenalite;
-}
     // Getters et Setters
     public Long getId() {
         return id;
@@ -44,11 +41,27 @@ public void setDureePenalite(Integer dureePenalite) {
         this.nomTypePenalite = nomTypePenalite;
     }
 
+    public Integer getDureePenalite() {
+        return dureePenalite;
+    }
+
+    public void setDureePenalite(Integer dureePenalite) {
+        this.dureePenalite = dureePenalite;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public TypeAdherent getTypeAdherent() {
+        return typeAdherent;
+    }
+
+    public void setTypeAdherent(TypeAdherent typeAdherent) {
+        this.typeAdherent = typeAdherent;
     }
 }

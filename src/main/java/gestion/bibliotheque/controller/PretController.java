@@ -49,6 +49,8 @@ public class PretController {
 
     @Autowired
     private AbonneRepository abonneRepository;
+    @Autowired
+    private JourNonOuvrableRepository jourNonOuvrableRepository;
 
     @GetMapping("/ajouter")
     public String afficherFormulaireAjoutPret(Model model) {
@@ -194,39 +196,42 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
 
         pret.setDateRetourReelle(dateRetourReelle);
 
-        
-       if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
+        List<jourNonOuvrable> joursNonOuvrables = jourNonOuvrableRepository.findByDateJourNonOuvrable(dateRetourReelle);
+        if (!joursNonOuvrables.isEmpty()) {
+            System.out.println("Erreur : Le jour du retour (" + dateRetourReelle + ") est un jour non ouvrable. Veuillez retourner le livre un jour après.");
+            return "redirect:/prets/liste";
+        }
+if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
     long joursDeRetard = ChronoUnit.DAYS.between(pret.getDateRetourPrevue(), dateRetourReelle);
 
     System.out.println("Livre rendu avec " + joursDeRetard + " jour(s) de retard.");
 
-    Long typePenaliteId;
-    if (joursDeRetard <= 7) {
-        typePenaliteId = 1L; // Retard mineur
-    } else {
-        typePenaliteId = 2L; // Retard majeur
-    }
+    TypeAdherent typeAdherent = pret.getAdherent().getTypeAdherent();
+    Integer dureePenalite = typeAdherent.getDureePenalite();
 
-    TypePenalite typeSuspension = typePenaliteRepository.findById(typePenaliteId).orElse(null);
-    if (typeSuspension != null) {
+    if (dureePenalite != null && dureePenalite > 0) {
         Penalite nouvellePenalite = new Penalite();
         nouvellePenalite.setAdherent(pret.getAdherent());
-        nouvellePenalite.setTypePenalite(typeSuspension);
         nouvellePenalite.setDateDebut(dateRetourReelle);
-        if (typeSuspension.getDureePenalite() != null) {
-            nouvellePenalite.setDateFin(dateRetourReelle.plusDays(typeSuspension.getDureePenalite()));
-        } else {
-            System.out.println("Durée de pénalité non définie.");
-        }
+        nouvellePenalite.setDateFin(dateRetourReelle.plusDays(dureePenalite));
+
+        // Ajout d'un TypePenalite par défaut (ex: "Retard")
+        TypePenalite typePenaliteDefaut = typePenaliteRepository.findByNomTypePenalite("Livre endommagé");
+        nouvellePenalite.setTypePenalite(typePenaliteDefaut);
+        
 
         penaliteRepository.save(nouvellePenalite);
+
         Adherent adherentPenalise = pret.getAdherent();
         adherentPenalise.setEstPenalise(true);
         adherentRepository.save(adherentPenalise);
+
         System.out.println("Pénalité créée pour l'adhérent " + pret.getAdherent().getNom() + " jusqu'au " + nouvellePenalite.getDateFin());
     } else {
-        System.out.println("ERREUR : Type de pénalité introuvable.");
+        System.out.println("Durée de pénalité non définie pour ce type d'adhérent.");
     }
+
+
 }
       
         
