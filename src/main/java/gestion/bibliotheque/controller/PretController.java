@@ -94,7 +94,6 @@ public class PretController {
             System.out.println("Adhérent non fourni dans le formulaire");
             return "redirect:/prets/liste";
         }
-        // Vérification de l'abonnement de l'adhérent
         Abonne abonne = abonneRepository.findByAdherent(adherent);
         LocalDate date = pret.getDatePret();
         if (abonne == null || abonne.getDateFin() == null || date == null || date.isAfter(abonne.getDateFin())) {
@@ -108,7 +107,6 @@ if (!pretsEnCours.isEmpty()) {
     return "redirect:/prets/liste";
 }
 
-// Vérifier si l'exemplaire est déjà emprunté (peu importe par qui)
 List<Pret> pretsActifsPourExemplaire = pretRepository.findByExemplaireAndDateRetourReelleIsNull(exemplaire);
 if (!pretsActifsPourExemplaire.isEmpty()) {
     System.out.println("Prêt refusé : L'exemplaire (ID: " + exemplaire.getId() 
@@ -143,6 +141,11 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
             
             if (ageAdherent < ageRestriction) {
                 System.out.println("Âge insuffisant pour emprunter ce livre.");
+                return "redirect:/prets/liste";
+            }
+            boolean jourPretNonOuvrable = jourNonOuvrableRepository.existsByDateJourNonOuvrable(datePret);
+            if (jourPretNonOuvrable) {
+                System.out.println("Emprunt impossible : " + datePret + " est un jour non ouvrable.");
                 return "redirect:/prets/liste";
             }
              // Vérification du quota max de prêts
@@ -196,11 +199,18 @@ if (!pretsActifsPourExemplaire.isEmpty()) {
 
         pret.setDateRetourReelle(dateRetourReelle);
 
-        List<jourNonOuvrable> joursNonOuvrables = jourNonOuvrableRepository.findByDateJourNonOuvrable(dateRetourReelle);
-        if (!joursNonOuvrables.isEmpty()) {
-            System.out.println("Erreur : Le jour du retour (" + dateRetourReelle + ") est un jour non ouvrable. Veuillez retourner le livre un jour après.");
-            return "redirect:/prets/liste";
-        }
+       LocalDate datePret = pret.getDatePret();
+    if (datePret == null) {
+        System.out.println("Date de prêt non fournie.");
+        return "redirect:/prets/liste";
+    }
+    // Vérification jour non ouvrable pour l'emprunt
+   
+ boolean jourRetourNonOuvrable = jourNonOuvrableRepository.existsByDateJourNonOuvrable(dateRetourReelle);
+    if (jourRetourNonOuvrable) {
+        System.out.println("Retour impossible : " + dateRetourReelle + " est un jour non ouvrable.");
+        return "redirect:/prets/liste";
+    }
 if (pret.getDateRetourPrevue() != null && dateRetourReelle.isAfter(pret.getDateRetourPrevue())) {
     long joursDeRetard = ChronoUnit.DAYS.between(pret.getDateRetourPrevue(), dateRetourReelle);
 

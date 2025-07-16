@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface JourNonOuvrableRepository extends JpaRepository<jourNonOuvrable, Long> {
     List<jourNonOuvrable> findByDateJourNonOuvrable(LocalDate dateJourNonOuvrable);
+    boolean existsByDateJourNonOuvrable(LocalDate dateJourNonOuvrable);
 }

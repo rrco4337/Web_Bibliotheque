@@ -20,7 +20,11 @@ public class Abonne {
 
     @Column(name = "date_fin")
     private LocalDate dateFin;
+ @Column(name = "valide")
+    private Boolean valide;
 
+    public Boolean getValide() { return valide; }
+    public void setValide(Boolean valide) { this.valide = valide; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -59,7 +59,7 @@ public class AdherentController {
     }
     @GetMapping("/connexion")
     public String afficherConnexion() {
-        return "connexionAdherent"; // nom de ta page de connexion (HTML)
+        return "connexionAdherent"; 
     }
     @PostMapping("/connexion")
 public String connexionAdherent(@RequestParam("prenom") String prenom,
