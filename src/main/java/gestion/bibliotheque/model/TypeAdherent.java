@@ -35,6 +35,19 @@ public class TypeAdherent {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "duree_penalite")
+    private Integer dureePenalite;
+
+// ...existing code...
+
+    public Integer getDureePenalite() {
+        return dureePenalite;
+    }
+
+    public void setDureePenalite(Integer dureePenalite) {
+        this.dureePenalite = dureePenalite;
+    }
+
     @OneToMany(mappedBy = "typeAdherent")
     @JsonManagedReference
     private List<Adherent> adherents;

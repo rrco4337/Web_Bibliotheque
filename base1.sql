@@ -30,14 +30,42 @@ CREATE TABLE Adherent (
     est_abonne BOOLEAN DEFAULT FALSE,
     est_penalise BOOLEAN DEFAULT FALSE
 );
-create table Abonne(
+CREATE TABLE Abonne(
     id SERIAL PRIMARY KEY,
     id_adherent INT REFERENCES Adherent(id),
     date_debut DATE,
-    date_fin DATE
+    date_fin DATE,
+    valide BOOLEAN
 );
-
+INSERT INTO Abonne (id_adherent, date_debut, date_fin, valide) VALUES 
+(1, '2025-02-01', '2025-07-24', TRUE),
+(2, '2025-02-01', '2025-07-01', FALSE),
+(3, '2025-04-01', '2025-12-01', TRUE),
+(4, '2025-07-01', '2026-07-01', TRUE),
+(5, '2025-08-01', '2026-05-01', FALSE),
+(6, '2025-07-01', '2026-06-01', TRUE),
+(7, '2025-06-01', '2025-12-01', TRUE),
+(8, '2024-10-01', '2025-06-01', FALSE);
 insert into Abonne(id_adherent,date_debut,date_fin) values (23,'2025-01-04','2025-11-04');
+
+CREATE TABLE jourNonOuvrable (
+    id SERIAL PRIMARY KEY,
+    date_jour_non_ouvrable DATE NOT NULL,
+    typeJour VARCHAR(255)
+);
+-- Inserting the holiday (Dimanche as jour férié)
+INSERT INTO jourNonOuvrable (date_jour_non_ouvrable, typeJour) VALUES 
+('2025-07-26', 'Jour ferie'),
+('2025-07-19', 'Jour ferie');
+
+-- Inserting the specific non-working dates
+INSERT INTO jourNonOuvrable (date_jour_non_ouvrable, typeJour) VALUES 
+('2025-07-13', 'Dimanche'),
+('2025-07-20', ' Dimanche'),
+('2025-07-27', 'Dimanche'),
+('2025-08-03', 'Dimanche'),
+('2025-08-10', 'Dimanche'),
+('2025-08-17', 'Dimanche');
 
 CREATE TABLE Livre (
     id SERIAL PRIMARY KEY,
@@ -74,7 +102,7 @@ CREATE TABLE Statut_Pret (
     id_statut_pret SERIAL PRIMARY KEY,
     nom_statut VARCHAR(50) NOT NULL UNIQUE
 );
-
+insert into Statut_Pret (nom_statut) values ('disponible'), ('emprunté');
 
 CREATE TABLE Exemplaire (
     id_exemplaire SERIAL PRIMARY KEY,
@@ -94,6 +122,8 @@ CREATE TABLE Type_Pret (
     duree_max INT
 );
 
+insert into Type_Pret (nom_type_pret, duree_max) VALUES
+('lecture sur place', 14),('prêt à domicile', 21);
     CREATE TABLE Pret (
         id SERIAL PRIMARY KEY,
         id_adherent INT REFERENCES Adherent(id),

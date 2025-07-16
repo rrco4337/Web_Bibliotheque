@@ -124,12 +124,16 @@ public Object adherentInfoApi(@PathVariable Long idAdherent) {
     if (adherent == null) return null;
 
     Abonne abonne = abonneRepository.findByAdherent(adherent);
+    int quotaPret = adherent.getTypeAdherent().getQuotaMaxPret();
+    int nbPrets = pretRepository.countByAdherentAndDateRetourReelleIsNull(adherent);
+    int quotaRestant = quotaPret - nbPrets;
 
     return new Object() {
-        public final int quotaPret = adherent.getTypeAdherent().getQuotaMaxPret();
-        public final Abonne abonnement = abonne;
-        public final boolean estPenalise = adherent.getEstPenalise();
-    };
+    public final int quotaPretMax = quotaPret;
+    public final int quotaDisponible = quotaRestant;
+    public final Abonne abonnement = abonne;
+    public final boolean estPenalise = adherent.getEstPenalise();
+};
 }
 
 
